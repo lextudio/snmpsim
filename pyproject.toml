@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "snmpsim-lextudio"
-version = "1.0.5"
+version = "1.0.6"
 description = "SNMP Simulator is a tool that acts as multitude of SNMP Agents built into real physical devices, from SNMP Manager's point of view. Simulator builds and uses a database of physical devices' SNMP footprints to respond like their original counterparts do."
 authors = ["Ilya Etingof <etingof@gmail.com>", "Lex Li <support@lextudio.com>"]
 license = "BSD-2-Clause"
@@ -30,7 +30,7 @@ include = ["docs"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-pysnmp-lextudio = ">=4.4.3"
+pysnmp-lextudio = "^5.0.0"
 
 [tool.poetry.group.dev.dependencies]
 codecov = "^2.1.12"

@@ -1,3 +1,8 @@
+Revision 1.0.6, released 15-10-2023
+-----------------------------------
+
+- Locked pysnmp-lextudio to 5.0 to avoid breaking changes in 6.0.
+
 Revision 1.0.5, released 15-10-2023
 -----------------------------------
 

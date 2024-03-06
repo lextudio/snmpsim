@@ -44,16 +44,16 @@ def init(**context):
 
         if context['options']:
             for x in split(context['options'], ','):
-                for k, v in split(x, ':'):
-                    if k == 'addon':
-                        if k in moduleContext['settings']:
-                            moduleContext['settings'][k].append(v)
-
-                        else:
-                            moduleContext['settings'][k] = [v]
+                k, v = split(x, ':')
+                if k == 'addon':
+                    if k in moduleContext['settings']:
+                        moduleContext['settings'][k].append(v)
 
                     else:
-                        moduleContext['settings'][k] = v
+                        moduleContext['settings'][k] = [v]
+
+                else:
+                    moduleContext['settings'][k] = v
 
                 if 'iterations' in moduleContext['settings']:
                     moduleContext['settings']['iterations'] = int(

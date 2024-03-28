@@ -114,11 +114,11 @@ def main():
         '--log-level', choices=log.LEVELS_MAP,
         type=str, default='info', help='Logging level.')
 
+    parser.add_argument(
+        '--protocol-version', choices=['1', '2c', '3'],
+        default='2c', help='SNMP protocol version')
+    
     v1arch_group = parser.add_argument_group('SNMPv1/v2c parameters')
-
-    v1arch_group.add_argument(
-        '--protocol-version', choices=['1', '2c'],
-        default='2c', help='SNMPv1/v2c protocol version')
 
     v1arch_group.add_argument(
         '--community', type=str, default='public',

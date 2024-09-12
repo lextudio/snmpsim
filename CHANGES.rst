@@ -1,3 +1,8 @@
+Revision 1.1.6, released on Sep 12, 2024
+----------------------------------------
+
+- Removed pyasn1.compat dependency.
+
 Revision 1.1.5, released on Aug 09, 2024
 ----------------------------------------
 

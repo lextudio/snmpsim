@@ -7,7 +7,7 @@
 from string import ascii_letters
 from string import digits
 
-from pyasn1.compat.octets import octs2str, str2octs, octs2ints
+
 from pyasn1.type import univ
 from pysnmp.proto import rfc1902, rfc1905
 
@@ -16,7 +16,7 @@ from snmpsim.grammar.abstract import AbstractGrammar
 
 
 class SnmprecGrammar(AbstractGrammar):
-    ALNUMS = set(octs2ints(str2octs(ascii_letters + digits)))
+    ALNUMS = set((ascii_letters + digits).encode("iso-8859-1"))
 
     TAG_MAP = {}
 
@@ -41,13 +41,13 @@ class SnmprecGrammar(AbstractGrammar):
 
     def build(self, oid, tag, val):
         if oid and tag:
-            return str2octs(f"{oid}|{tag}|{val}\n")
+            return f"{oid}|{tag}|{val}\n".encode("iso-8859-1")
 
         raise error.SnmpsimError(f"empty OID/tag <{oid}/{tag}>")
 
     def parse(self, line):
         try:
-            oid, tag, value = octs2str(line).strip().split("|", 2)
+            oid, tag, value = line.decode("iso-8859-1").strip().split("|", 2)
 
         except Exception as exc:
             raise error.SnmpsimError(f"broken record <{line}>: {exc}")

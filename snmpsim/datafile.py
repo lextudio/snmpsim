@@ -9,7 +9,7 @@
 import os
 import stat
 
-from pyasn1.compat.octets import str2octs
+
 from pyasn1.type import univ
 from pysnmp.carrier.asyncio.dgram import udp
 from pysnmp.carrier.asyncio.dgram import udp6
@@ -102,6 +102,7 @@ class DataFile(AbstractLayout):
             )
         )
 
+        separator = b","
         for oid, val in var_binds:
             text_oid = str(univ.OctetString(".".join(["%s" % x for x in oid])))
 
@@ -115,7 +116,7 @@ class DataFile(AbstractLayout):
                 subtree_flag = exact_match = False
 
             else:
-                offset, subtree_flag, prev_offset = line.split(str2octs(","), 2)
+                offset, subtree_flag, prev_offset = line.split(separator, 2)
                 subtree_flag, exact_match = int(subtree_flag), True
 
             offset = int(offset)
@@ -139,7 +140,7 @@ class DataFile(AbstractLayout):
                             try:
                                 _, subtree_flag, _ = self._record_index.lookup(
                                     str(_next_oid)
-                                ).split(str2octs(","), 2)
+                                ).split(separator, 2)
 
                             except KeyError:
                                 log.error(
@@ -164,7 +165,7 @@ class DataFile(AbstractLayout):
 
                     try:
                         _, _, _prev_offset = self._record_index.lookup(str(_oid)).split(
-                            str2octs(","), 2
+                            separator, 2
                         )
 
                     except KeyError:
@@ -260,6 +261,7 @@ def get_data_files(tgt_dir, top_len=None):
     # Start processing the directory
     return process_directory(tgt_dir, top_len)
 
+
 def process_directory(tgt_dir, top_len):
     # Initialize an empty list to store directory content
     dir_content = []
@@ -283,6 +285,7 @@ def process_directory(tgt_dir, top_len):
     # Return the directory content
     return dir_content
 
+
 def process_symlink(full_path, tgt_dir):
     # Read the target of the symbolic link
     full_path = os.readlink(full_path)
@@ -294,6 +297,7 @@ def process_symlink(full_path, tgt_dir):
     # Return the full path and inode
     return full_path, inode
 
+
 def process_file(d_file, full_path, rel_path):
     # Check if the file extension matches any of the record types
     for dExt in variation.RECORD_TYPES:
@@ -302,6 +306,7 @@ def process_file(d_file, full_path, rel_path):
             return process_file_extension(d_file, full_path, rel_path, dExt)
     # If it does not, return an empty list
     return []
+
 
 def process_file_extension(d_file, full_path, rel_path, dExt):
     # Process the relative path to create an identifier for the file
@@ -317,6 +322,7 @@ def process_file_extension(d_file, full_path, rel_path, dExt):
     ident = ident.replace(os.path.sep, "/")
     # Return a tuple containing the full path, the record type, and the identifier
     return [(full_path, variation.RECORD_TYPES[dExt], ident)]
+
 
 def probe_context(transport_domain, transport_address, context_engine_id, context_name):
     """Suggest variations of context name based on request data"""

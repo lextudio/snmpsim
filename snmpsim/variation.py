@@ -184,7 +184,7 @@ class CompressedSnmprecRecord(SnmprecRecordMixIn, snmprec.CompressedSnmprecRecor
 RECORD_TYPES[CompressedSnmprecRecord.ext] = CompressedSnmprecRecord()
 
 
-def load_variation_modules(search_path, modules_options):
+def load_variation_modules(search_path, modules_options) -> dict:
     variation_modules = {}
     modules_options = modules_options.copy()
 

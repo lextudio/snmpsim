@@ -10,8 +10,6 @@ from snmpsim import error
 from snmpsim.grammar import snmprec
 from snmpsim.record import dump
 
-from pyasn1.compat import octets
-
 
 class SnmprecRecord(dump.DumpRecord):
     grammar = snmprec.SnmprecGrammar()
@@ -88,8 +86,8 @@ class SnmprecRecord(dump.DumpRecord):
                 return oid, tag, self.grammar.TAG_MAP[tag](value)
 
             elif encoding_id == "x":
-                if octets.isOctetsType(value):
-                    value = octets.octs2str(value)
+                if isinstance(value, bytes):
+                    value = value.decode("iso-8859-1")
 
                 return oid, tag, self.grammar.TAG_MAP[tag](hexValue=value)
 

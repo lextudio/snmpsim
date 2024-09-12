@@ -11,7 +11,7 @@ import bisect
 import os
 import time
 
-from pyasn1.compat.octets import str2octs
+
 from pysnmp.proto import rfc1902
 
 from snmpsim import confdir
@@ -251,7 +251,7 @@ def variate(oid, tag, value, **context):
         exactMatch = False
 
     else:
-        offset, subtreeFlag, prevOffset = line.split(str2octs(","))
+        offset, subtreeFlag, prevOffset = line.split(b",")
         exactMatch = True
 
     text.seek(int(offset))

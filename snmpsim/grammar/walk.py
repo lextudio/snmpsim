@@ -7,7 +7,6 @@
 import re
 
 from pyasn1.codec.ber import encoder
-from pyasn1.compat.octets import octs2str
 from pyasn1.type import univ
 from pysnmp.proto import rfc1902
 
@@ -191,7 +190,7 @@ class WalkGrammar(abstract.AbstractGrammar):
         line = line.decode("ascii", "ignore").encode()
 
         try:
-            oid, value = octs2str(line).strip().split(" = ", 1)
+            oid, value = line.decode("iso-8859-1").strip().split(" = ", 1)
 
         except Exception:
             raise error.SnmpsimError("broken record <%s>" % line)

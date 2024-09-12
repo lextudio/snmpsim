@@ -14,7 +14,6 @@ import traceback
 from hashlib import md5
 
 from pyasn1 import debug as pyasn1_debug
-from pyasn1.compat.octets import null
 from pyasn1.type import univ
 from pysnmp import debug as pysnmp_debug
 from pysnmp import error
@@ -25,6 +24,7 @@ from pysnmp.entity import config
 from pysnmp.entity import engine
 from pysnmp.entity.rfc3413 import cmdrsp
 from pysnmp.entity.rfc3413 import context
+from pysnmp.proto.api import v2c
 
 from snmpsim import confdir
 from snmpsim import controller
@@ -683,19 +683,21 @@ configured automatically based on simulation data file paths relative to
 
                 context_name = agent_name
 
-                if not args.v3_only:
-                    # snmpCommunityTable::snmpCommunityIndex can't be > 32
-                    config.addV1System(
-                        snmp_engine,
-                        agent_name,
-                        community_name,
-                        contextName=context_name,
-                    )
+                if snmp_engine:
+                    if not args.v3_only:
+                        # snmpCommunityTable::snmpCommunityIndex can't be > 32
+                        config.addV1System(
+                            snmp_engine,
+                            agent_name,
+                            community_name,
+                            contextName=context_name,
+                        )
 
-                snmp_context.registerContextName(context_name, mib_instrum)
+                if snmp_context:
+                    snmp_context.registerContextName(context_name, mib_instrum)
 
-                if len(community_name) <= 32:
-                    snmp_context.registerContextName(community_name, mib_instrum)
+                    if len(community_name) <= 32:
+                        snmp_context.registerContextName(community_name, mib_instrum)
 
                 data_index_instrum_controller.add_data_file(
                     full_path, community_name, context_name
@@ -769,7 +771,7 @@ configured automatically based on simulation data file paths relative to
                         snmp_engine, v3_context_engine_id
                     )
                     # unregister default context
-                    snmp_context.unregisterContextName(null)
+                    snmp_context.unregisterContextName(b"")
 
                     log.info(
                         "SNMPv3 Context Engine ID: "
@@ -976,7 +978,7 @@ configured automatically based on simulation data file paths relative to
 
                 else:
                     snmp_engine = engine.SnmpEngine(
-                        snmpEngineID=univ.OctetString(hexValue=v3_engine_id)
+                        snmpEngineID=v2c.OctetString(hexValue=v3_engine_id)
                     )
 
             except Exception as exc:
@@ -988,8 +990,7 @@ configured automatically based on simulation data file paths relative to
 
             config.addContext(snmp_engine, "")
 
-        elif opt[0] == "--v3-context-engine-id":
-            v3_context_engine_ids.append((univ.OctetString(hexValue=opt[1]), []))
+            v3_context_engine_ids.append((v2c.OctetString(hexValue=opt[1]), []))
 
         elif opt[0] == "--data-dir":
             if v3_context_engine_ids:

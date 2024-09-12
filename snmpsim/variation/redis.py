@@ -21,7 +21,7 @@
 import random
 import time
 
-from pyasn1.compat import octets
+
 from pysnmp.smi.error import WrongValueError
 
 from snmpsim import error, log
@@ -97,7 +97,7 @@ unpackTag = SnmprecRecord().unpack_tag
 def lindex(dbConn, *args):
     ret = dbConn.lindex(*args)
     if ret is not None:
-        ret = octets.octs2str(ret)
+        ret = ret.decode("iso-8859-1")
 
     return ret
 
@@ -105,7 +105,7 @@ def lindex(dbConn, *args):
 def get(dbConn, *args):
     ret = dbConn.get(*args)
     if ret is not None:
-        ret = octets.octs2str(ret)
+        ret = ret.decode("iso-8859-1")
 
     return ret
 
@@ -113,7 +113,7 @@ def get(dbConn, *args):
 def evalsha(dbConn, *args):
     ret = dbConn.evalsha(*args)
     if ret is not None:
-        ret = octets.octs2str(ret)
+        ret = ret.decode("iso-8859-1")
 
     return ret
 

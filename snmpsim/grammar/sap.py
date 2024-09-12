@@ -4,7 +4,6 @@
 # Copyright (c) 2010-2019, Ilya Etingof <etingof@gmail.com>
 # License: https://www.pysnmp.com/snmpsim/license.html
 #
-from pyasn1.compat.octets import octs2str
 from pyasn1.type import univ
 from pysnmp.proto import rfc1902
 
@@ -36,7 +35,9 @@ class SapGrammar(abstract.AbstractGrammar):
         filters = {"OctetString": self._stringFilter}
 
         try:
-            oid, tag, value = (x.strip() for x in octs2str(line).split(",", 2))
+            oid, tag, value = (
+                x.strip() for x in line.decode("iso-8859-1").split(",", 2)
+            )
 
         except Exception as exc:
             raise error.SnmpsimError(f"broken record <{line}>: {exc}")

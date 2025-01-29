@@ -542,7 +542,7 @@ def main():
             agent_udpv4_endpoint
         )
 
-        transport_dispatcher.registerTransport(
+        transport_dispatcher.register_transport(
             transport_domain, agent_udpv4_endpoint[0]
         )
 
@@ -565,7 +565,7 @@ def main():
             agent_udpv6_endpoint
         )
 
-        transport_dispatcher.registerTransport(
+        transport_dispatcher.register_transport(
             transport_domain, agent_udpv6_endpoint[0]
         )
 
@@ -578,7 +578,7 @@ def main():
             )
         )
 
-    transport_dispatcher.registerRecvCbFun(commandResponderCbFun)
+    transport_dispatcher.register_recv_callback(commandResponderCbFun)
 
     transport_dispatcher.jobStarted(1)  # server job would never finish
 

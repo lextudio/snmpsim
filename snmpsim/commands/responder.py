@@ -691,10 +691,10 @@ configured automatically based on simulation data file paths relative to
                         contextName=context_name,
                     )
 
-                snmp_context.registerContextName(context_name, mib_instrum)
+                snmp_context.register_context_name(context_name, mib_instrum)
 
                 if len(community_name) <= 32:
-                    snmp_context.registerContextName(community_name, mib_instrum)
+                    snmp_context.register_context_name(community_name, mib_instrum)
 
                 data_index_instrum_controller.add_data_file(
                     full_path, community_name, context_name
@@ -726,7 +726,7 @@ configured automatically based on simulation data file paths relative to
 
     transport_dispatcher = AsyncioDispatcher()
 
-    transport_dispatcher.registerRoutingCbFun(lambda td, t, d: td)
+    transport_dispatcher.register_routing_callback(lambda td, t, d: td)
 
     if not snmp_args or snmp_args[0][0] != "--v3-engine-id":
         snmp_args.insert(0, ("--v3-engine-id", "auto"))
@@ -768,7 +768,7 @@ configured automatically based on simulation data file paths relative to
                         snmp_engine, v3_context_engine_id
                     )
                     # unregister default context
-                    snmp_context.unregisterContextName(b"")
+                    snmp_context.unregister_context_name(b"")
 
                     log.info(
                         "SNMPv3 Context Engine ID: "
@@ -879,7 +879,7 @@ configured automatically based on simulation data file paths relative to
                             "%s" % (v3_priv_keys[v3User], v3_priv_protos[v3User])
                         )
 
-                snmp_context.registerContextName("index", data_index_instrum_controller)
+                snmp_context.register_context_name("index", data_index_instrum_controller)
 
                 log.info(
                     "Maximum number of variable bindings in SNMP response: "
@@ -899,7 +899,7 @@ configured automatically based on simulation data file paths relative to
                     transport_domain = udp.domainName + (transport_index["udpv4"],)
                     transport_index["udpv4"] += 1
 
-                    snmp_engine.registerTransportDispatcher(
+                    snmp_engine.register_transport_dispatcher(
                         transport_dispatcher, transport_domain
                     )
 
@@ -920,7 +920,7 @@ configured automatically based on simulation data file paths relative to
                     transport_domain = udp6.domainName + (transport_index["udpv6"],)
                     transport_index["udpv6"] += 1
 
-                    snmp_engine.registerTransportDispatcher(
+                    snmp_engine.register_transport_dispatcher(
                         transport_dispatcher, transport_domain
                     )
 
@@ -950,7 +950,7 @@ configured automatically based on simulation data file paths relative to
                 if opt[0] == "end-of-options":
                     # Load up the rest of MIBs while running privileged
                     (
-                        snmp_engine.msgAndPduDsp.mibInstrumController.mibBuilder.loadModules()
+                        snmp_engine.msgAndPduDsp.mibInstrumController.get_mib_builder().loadModules()
                     )
                     break
 
@@ -985,7 +985,7 @@ configured automatically based on simulation data file paths relative to
                 )
                 return 1
 
-            config.addContext(snmp_engine, "")
+            config.add_context(snmp_engine, "")
 
         elif opt[0] == "--v3-context-engine-id":
             v3_context_engine_ids.append((univ.OctetString(hexValue=opt[1]), []))

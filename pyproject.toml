@@ -31,6 +31,7 @@ include = ["docs"]
 [tool.poetry.dependencies]
 python = "^3.9"
 pysnmp = "^7.0.0"
+pysmi = ">0.3.0"
 
 [tool.poetry.group.dev.dependencies]
 codecov = "^2.1.12"

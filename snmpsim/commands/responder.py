@@ -535,7 +535,7 @@ configured automatically based on simulation data file paths relative to
         return 1
 
     if args.debug:
-        pysnmp_debug.setLogger(pysnmp_debug.Debug(*args.debug))
+        pysnmp_debug.set_logger(pysnmp_debug.Debug(*args.debug))
 
     if args.debug_asn1:
         pyasn1_debug.setLogger(pyasn1_debug.Debug(*args.debug_asn1))

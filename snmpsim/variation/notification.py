@@ -7,7 +7,7 @@
 # Managed value variation module
 # Send SNMP Notification
 #
-from pysnmp.hlapi.asyncio import *
+from pysnmp.hlapi.asyncio import *  # Import all necessary modules
 
 from snmpsim import error
 from snmpsim import log
@@ -76,14 +76,14 @@ def variate(oid, tag, value, **context):
             # register this SNMP Engine to handle our transports'
             # receiver IDs (which we build by outbound and simulator
             # transportDomains concatenation)
-            snmpEngine.registerTransportDispatcher(
+            snmpEngine.register_transport_dispatcher(
                 snmpEngine.transportDispatcher,
-                UdpTransportTarget.transportDomain + context["transportDomain"],
+                UdpTransportTarget.TRANSPORT_DOMAIN + context["transportDomain"],
             )
 
-            snmpEngine.registerTransportDispatcher(
+            snmpEngine.register_transport_dispatcher(
                 snmpEngine.transportDispatcher,
-                Udp6TransportTarget.transportDomain + context["transportDomain"],
+                Udp6TransportTarget.TRANSPORT_DOMAIN + context["transportDomain"],
             )
 
             moduleContext[snmpEngine][context["transportDomain"]] = 1
@@ -224,10 +224,14 @@ def variate(oid, tag, value, **context):
             return context["origOid"], tag, context["errorStatus"]
 
         if args["proto"] == "udp":
-            target = UdpTransportTarget((args["host"], int(args["port"])))
+            target = run_in_new_loop(
+                UdpTransportTarget.create((args["host"], int(args["port"])))
+            )
 
         elif args["proto"] == "udp6":
-            target = Udp6TransportTarget((args["host"], int(args["port"])))
+            target = run_in_new_loop(
+                Udp6TransportTarget.create((args["host"], int(args["port"])))
+            )
 
         else:
             log.info("notification: unknown transport %s" % args["proto"])
@@ -239,8 +243,8 @@ def variate(oid, tag, value, **context):
             localAddress = args["bindaddr"]
 
         else:
-            transportDomain = context["transportDomain"][: len(target.transportDomain)]
-            if transportDomain == target.transportDomain:
+            transportDomain = context["transportDomain"][: len(target.TRANSPORT_DOMAIN)]
+            if transportDomain == target.TRANSPORT_DOMAIN:
                 # localAddress = snmpEngine.transportDispatcher.getTransport(
                 #     context["transportDomain"]
                 # ).getLocalAddress()[0]
@@ -257,10 +261,10 @@ def variate(oid, tag, value, **context):
 
         if localAddress:
             log.info("notification: binding to local address %s" % localAddress)
-            target.setLocalAddress((localAddress, 0))
+            target.set_local_address((localAddress, 0))
 
         # this will make target objects different based on their bind address
-        target.transportDomain = target.transportDomain + context["transportDomain"]
+        target.TRANSPORT_DOMAIN = target.TRANSPORT_DOMAIN + context["transportDomain"]
 
         varBinds = []
 
@@ -297,7 +301,7 @@ def variate(oid, tag, value, **context):
         ).addVarBinds(*varBinds)
 
         run_in_new_loop(
-            sendNotification(
+            send_notification(
                 snmpEngine,
                 authData,
                 target,

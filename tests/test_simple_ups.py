@@ -1,3 +1,4 @@
+# filepath: /Users/lextm/pysnmp.com/snmpsim/tests/test_simple_ups.py
 import os
 import sys
 import threading
@@ -5,7 +6,6 @@ import time
 from snmpsim.commands.responder import main as responder_main
 import pytest
 from pysnmp.hlapi.asyncio import *
-from pysnmp.hlapi.asyncio.slim import Slim
 
 import asyncio
 
@@ -63,49 +63,49 @@ def run_app_in_background():
 async def test_main_with_specific_args(run_app_in_background, capsys):
     snmpEngine = SnmpEngine()
     try:
-        # Create SNMP GET request v1
-        with Slim(1) as slim:
-            errorIndication, errorStatus, errorIndex, varBinds = await slim.get(
-                "public",
-                "localhost",
-                PORT_NUMBER,
-                ObjectType(ObjectIdentity("SNMPv2-MIB", "sysDescr", 0)),
-                retries=0,
-            )
+        # SNMPv1 - using community string with mpModel=1
+        communityDataV1 = CommunityData("public", mpModel=1)  # SNMPv1
+        errorIndication, errorStatus, errorIndex, varBinds = await get_cmd(
+            snmpEngine,
+            communityDataV1,
+            await UdpTransportTarget.create(("localhost", PORT_NUMBER), retries=0),
+            ContextData(),
+            ObjectType(ObjectIdentity("SNMPv2-MIB", "sysDescr", 0)),
+        )
 
-            assert errorIndication is None
-            assert errorStatus == 0
-            assert errorIndex == 0
-            assert len(varBinds) == 1
-            assert varBinds[0][0].prettyPrint() == "SNMPv2-MIB::sysDescr.0"
-            assert (
-                varBinds[0][1].prettyPrint()
-                == "APC Web/SNMP Management Card (MB:v4.1.0 PF:v6.7.2 PN:apc_hw05_aos_672.bin AF1:v6.7.2 AN1:apc_hw05_rpdu2g_672.bin MN:AP8932 HR:02 SN: 3F503A169043 MD:01/23/2019)"
-            )
-            assert isinstance(varBinds[0][1], OctetString)
+        assert errorIndication is None
+        assert errorStatus == 0
+        assert errorIndex == 0
+        assert len(varBinds) == 1
+        assert varBinds[0][0].prettyPrint() == "SNMPv2-MIB::sysDescr.0"
+        assert (
+            varBinds[0][1].prettyPrint()
+            == "APC Web/SNMP Management Card (MB:v4.1.0 PF:v6.7.2 PN:apc_hw05_aos_672.bin AF1:v6.7.2 AN1:apc_hw05_rpdu2g_672.bin MN:AP8932 HR:02 SN: 3F503A169043 MD:01/23/2019)"
+        )
+        assert isinstance(varBinds[0][1], OctetString)
 
-        # # v2c
-        with Slim() as slim:
-            errorIndication, errorStatus, errorIndex, varBinds = await slim.get(
-                "public",
-                "localhost",
-                PORT_NUMBER,
-                ObjectType(ObjectIdentity("SNMPv2-MIB", "sysDescr", 0)),
-                retries=0,
-            )
+        # SNMPv2c - using community string with default mpModel (1)
+        communityDataV2c = CommunityData("public")  # SNMPv2c (default)
+        errorIndication, errorStatus, errorIndex, varBinds = await get_cmd(
+            snmpEngine,
+            communityDataV2c,
+            await UdpTransportTarget.create(("localhost", PORT_NUMBER), retries=0),
+            ContextData(),
+            ObjectType(ObjectIdentity("SNMPv2-MIB", "sysDescr", 0)),
+        )
 
-            assert errorIndication is None
-            assert errorStatus == 0
-            assert errorIndex == 0
-            assert len(varBinds) == 1
-            assert varBinds[0][0].prettyPrint() == "SNMPv2-MIB::sysDescr.0"
-            assert (
-                varBinds[0][1].prettyPrint()
-                == "APC Web/SNMP Management Card (MB:v4.1.0 PF:v6.7.2 PN:apc_hw05_aos_672.bin AF1:v6.7.2 AN1:apc_hw05_rpdu2g_672.bin MN:AP8932 HR:02 SN: 3F503A169043 MD:01/23/2019)"
-            )
-            assert isinstance(varBinds[0][1], OctetString)
+        assert errorIndication is None
+        assert errorStatus == 0
+        assert errorIndex == 0
+        assert len(varBinds) == 1
+        assert varBinds[0][0].prettyPrint() == "SNMPv2-MIB::sysDescr.0"
+        assert (
+            varBinds[0][1].prettyPrint()
+            == "APC Web/SNMP Management Card (MB:v4.1.0 PF:v6.7.2 PN:apc_hw05_aos_672.bin AF1:v6.7.2 AN1:apc_hw05_rpdu2g_672.bin MN:AP8932 HR:02 SN: 3F503A169043 MD:01/23/2019)"
+        )
+        assert isinstance(varBinds[0][1], OctetString)
 
-        # v3
+        # SNMPv3 - using USM user data
         authData = UsmUserData(
             "simulator",
             "auctoritas",
@@ -113,13 +113,12 @@ async def test_main_with_specific_args(run_app_in_background, capsys):
             authProtocol=usmHMACMD5AuthProtocol,
             privProtocol=usmDESPrivProtocol,
         )
-        errorIndication, errorStatus, errorIndex, varBinds = await getCmd(
+        errorIndication, errorStatus, errorIndex, varBinds = await get_cmd(
             snmpEngine,
             authData,
-            UdpTransportTarget(("localhost", PORT_NUMBER), retries=0),
+            await UdpTransportTarget.create(("localhost", PORT_NUMBER), retries=0),
             ContextData(contextName=OctetString("public").asOctets()),
             ObjectType(ObjectIdentity("SNMPv2-MIB", "sysDescr", 0)),
-            retries=0,
         )
 
         assert errorIndication is None
@@ -134,7 +133,6 @@ async def test_main_with_specific_args(run_app_in_background, capsys):
 
     finally:
         if snmpEngine.transportDispatcher:
-            snmpEngine.transportDispatcher.closeDispatcher()
+            snmpEngine.transportDispatcher.close_dispatcher()
 
         await asyncio.sleep(TIME_OUT)
-    # Rest of your test code...

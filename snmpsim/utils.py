@@ -47,12 +47,20 @@ def split(val, sep):
 
 
 def run_in_new_loop(coroutine):
-    """Run a coroutine in a new event loop"""
+    """Run a coroutine in a new event loop and return its result"""
+    result = None
 
     def run():
+        nonlocal result
         new_loop = asyncio.new_event_loop()
-        new_loop.run_until_complete(coroutine)
+        asyncio.set_event_loop(new_loop)
+        try:
+            result = new_loop.run_until_complete(coroutine)
+        finally:
+            new_loop.close()
 
     thread = threading.Thread(target=run)
     thread.start()
     thread.join()
+
+    return result

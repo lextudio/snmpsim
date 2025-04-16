@@ -69,10 +69,10 @@ async def test_main_with_specific_args(run_app_in_background, capsys):
             authProtocol=usmHMACMD5AuthProtocol,
             privProtocol=usmDESPrivProtocol,
         )
-        errorIndication, errorStatus, errorIndex, varBinds = await getCmd(
+        errorIndication, errorStatus, errorIndex, varBinds = await get_cmd(
             snmpEngine,
             authData,
-            UdpTransportTarget(("localhost", PORT_NUMBER), retries=0),
+            await UdpTransportTarget.create(("localhost", PORT_NUMBER), retries=0),
             ContextData(contextName=OctetString("public").asOctets()),
             ObjectType(ObjectIdentity("SNMPv2-MIB", "sysDescr", 0)),
         )
@@ -88,8 +88,8 @@ async def test_main_with_specific_args(run_app_in_background, capsys):
         assert isinstance(varBinds[0][1], OctetString)
 
     finally:
-        if snmpEngine.transportDispatcher:
-            snmpEngine.transportDispatcher.closeDispatcher()
+        if snmpEngine.transport_dispatcher:
+            snmpEngine.transport_dispatcher.close_dispatcher()
 
         await asyncio.sleep(TIME_OUT)
     # Rest of your test code...

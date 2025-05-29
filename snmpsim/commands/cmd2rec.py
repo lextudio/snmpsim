@@ -620,7 +620,7 @@ def main():
 
                 # initiate another SNMP walk iteration
                 if args.use_getbulk:
-                    cmd_gen.sendVarBinds(
+                    cmd_gen.send_varbinds(
                         snmp_engine,
                         "tgt",
                         args.v3_context_engine_id,
@@ -633,7 +633,7 @@ def main():
                     )
 
                 else:
-                    cmd_gen.sendVarBinds(
+                    cmd_gen.send_varbinds(
                         snmp_engine,
                         "tgt",
                         args.v3_context_engine_id,
@@ -713,7 +713,7 @@ def main():
 
                     # initiate another SNMP walk iteration
                     if args.use_getbulk:
-                        cmd_gen.sendVarBinds(
+                        cmd_gen.send_varbinds(
                             snmp_engine,
                             "tgt",
                             args.v3_context_engine_id,
@@ -726,7 +726,7 @@ def main():
                         )
 
                     else:
-                        cmd_gen.sendVarBinds(
+                        cmd_gen.send_varbinds(
                             snmp_engine,
                             "tgt",
                             args.v3_context_engine_id,
@@ -776,7 +776,7 @@ def main():
     if args.use_getbulk:
         cmd_gen = cmdgen.BulkCommandGenerator()
 
-        cmd_gen.sendVarBinds(
+        cmd_gen.send_varbinds(
             snmp_engine,
             "tgt",
             args.v3_context_engine_id,
@@ -791,7 +791,7 @@ def main():
     else:
         cmd_gen = cmdgen.NextCommandGenerator()
 
-        cmd_gen.sendVarBinds(
+        cmd_gen.send_varbinds(
             snmp_engine,
             "tgt",
             args.v3_context_engine_id,

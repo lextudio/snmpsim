@@ -56,3 +56,30 @@ def run_in_new_loop(coroutine):
     thread = threading.Thread(target=run)
     thread.start()
     thread.join()
+
+
+def run_in_loop_with_return(coroutine):
+    """Run a coroutine in a new event loop"""
+    def run():
+        event_loop = asyncio.new_event_loop()
+        return event_loop.run_until_complete(coroutine)
+
+    thread = ThreadWithReturnValue(target=run)
+    thread.start()
+    return thread.join()
+
+
+class ThreadWithReturnValue(threading.Thread):
+    """Subclass thread to access return value from join."""
+    def __init__(self, group=None, target=None, name=None,
+                 args=(), kwargs={}, Verbose=None):
+        threading.Thread.__init__(self, group, target, name, args, kwargs)
+        self._return = None
+
+    def run(self):
+        if self._target is not None:
+            self._return = self._target(*self._args, **self._kwargs)
+
+    def join(self, *args):
+        threading.Thread.join(self, *args)
+        return self._return

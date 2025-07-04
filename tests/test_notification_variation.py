@@ -5,7 +5,7 @@ import time
 from snmpsim.commands.responder import main as responder_main
 import pytest
 from pysnmp.hlapi.asyncio import *
-from pysnmp.hlapi.asyncio.slim import Slim
+from pysnmp.hlapi.v1arch.asyncio.slim import Slim
 
 import asyncio
 
@@ -115,8 +115,8 @@ async def test_main_with_specific_args(run_app_in_background, capsys):
             )  # data is not cached
             assert isinstance(varBinds[0][1], OctetString)
     finally:
-        if snmpEngine.transportDispatcher:
-            snmpEngine.transportDispatcher.closeDispatcher()
+        if snmpEngine.transport_dispatcher:
+            snmpEngine.transport_dispatcher.close_dispatcher()
 
         await asyncio.sleep(TIME_OUT)
     # Rest of your test code...

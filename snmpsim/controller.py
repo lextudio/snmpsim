@@ -32,7 +32,7 @@ class MibInstrumController:
         ac_fun, snmp_engine = ac_info  # we injected snmpEngine object earlier
 
         # this API is first introduced in pysnmp 4.2.6
-        execCtx = snmp_engine.observer.getExecutionContext(
+        execCtx = snmp_engine.observer.get_execution_context(
             "rfc3412.receiveMessage:request"
         )
 
@@ -97,19 +97,19 @@ class MibInstrumController:
             "setFlag": set_flag,
         }
 
-    def readVars(self, var_binds, acInfo=None):
+    def read_variables(self, *var_binds, snmpEngine, acFun, cbCtx):
         return self._data_file.process_var_binds(
-            var_binds, **self._get_call_context(acInfo, False)
+            var_binds, **self._get_call_context((acFun, snmpEngine), False)
         )
 
-    def readNextVars(self, var_binds, acInfo=None):
+    def read_next_variables(self, *var_binds, snmpEngine, acFun, cbCtx):
         return self._data_file.process_var_binds(
-            var_binds, **self._get_call_context(acInfo, True)
+            var_binds, **self._get_call_context((acFun, snmpEngine), True)
         )
 
-    def writeVars(self, var_binds, acInfo=None):
+    def write_variables(self, *var_binds, snmpEngine, acFun, cbCtx):
         return self._data_file.process_var_binds(
-            var_binds, **self._get_call_context(acInfo, False, True)
+            var_binds, **self._get_call_context((acFun, snmpEngine), False, True)
         )
 
 
@@ -126,7 +126,7 @@ class DataIndexInstrumController:
     def __str__(self):
         return "<index> controller"
 
-    def readVars(self, var_binds, acInfo=None):
+    def read_variables(self, *var_binds, snmpEngine, acFun, cbCtx):
         return [(vb[0], self._db.get(vb[0], exval.noSuchInstance)) for vb in var_binds]
 
     def _get_next_val(self, key, default):
@@ -139,10 +139,10 @@ class DataIndexInstrumController:
         else:
             return key, self._db[key]
 
-    def readNextVars(self, var_binds, acInfo=None):
+    def read_next_variables(self, *var_binds, snmpEngine, acFun, cbCtx):
         return [self._get_next_val(vb[0], exval.endOfMib) for vb in var_binds]
 
-    def writeVars(self, var_binds, acInfo=None):
+    def write_variables(self, *var_binds, snmpEngine, acFun, cbCtx):
         return [(vb[0], exval.noSuchInstance) for vb in var_binds]
 
     def add_data_file(self, *args):

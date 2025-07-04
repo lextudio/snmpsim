@@ -38,25 +38,25 @@ from snmpsim.error import SnmpsimError
 from snmpsim.reporting.manager import ReportingManager
 
 AUTH_PROTOCOLS = {
-    "MD5": config.usmHMACMD5AuthProtocol,
-    "SHA": config.usmHMACSHAAuthProtocol,
-    "SHA224": config.usmHMAC128SHA224AuthProtocol,
-    "SHA256": config.usmHMAC192SHA256AuthProtocol,
-    "SHA384": config.usmHMAC256SHA384AuthProtocol,
-    "SHA512": config.usmHMAC384SHA512AuthProtocol,
-    "NONE": config.usmNoAuthProtocol,
+    "MD5": config.USM_AUTH_HMAC96_MD5,
+    "SHA": config.USM_AUTH_HMAC96_SHA,
+    "SHA224": config.USM_AUTH_HMAC128_SHA224,
+    "SHA256": config.USM_AUTH_HMAC192_SHA256,
+    "SHA384": config.USM_AUTH_HMAC256_SHA384,
+    "SHA512": config.USM_AUTH_HMAC384_SHA512,
+    "NONE": config.USM_AUTH_NONE,
 }
 
 PRIV_PROTOCOLS = {
-    "DES": config.usmDESPrivProtocol,
-    "3DES": config.usm3DESEDEPrivProtocol,
-    "AES": config.usmAesCfb128Protocol,
-    "AES128": config.usmAesCfb128Protocol,
-    "AES192": config.usmAesCfb192Protocol,
-    "AES192BLMT": config.usmAesBlumenthalCfb192Protocol,
-    "AES256": config.usmAesCfb256Protocol,
-    "AES256BLMT": config.usmAesBlumenthalCfb256Protocol,
-    "NONE": config.usmNoPrivProtocol,
+    "DES": config.USM_PRIV_CBC56_DES,
+    "3DES": config.USM_PRIV_CBC168_3DES,
+    "AES": config.USM_PRIV_CFB128_AES,
+    "AES128": config.USM_PRIV_CFB128_AES,
+    "AES192": config.USM_PRIV_CFB192_AES,
+    "AES192BLMT": config.USM_PRIV_CFB192_AES_BLUMENTHAL,
+    "AES256": config.USM_PRIV_CFB256_AES,
+    "AES256BLMT": config.USM_PRIV_CFB256_AES_BLUMENTHAL,
+    "NONE": config.USM_PRIV_NONE,
 }
 
 DESCRIPTION = (
@@ -153,7 +153,7 @@ class GetCommandResponder(cmdrsp.GetCommandResponder):
                 state_reference,
                 probe_hash_context(self, snmp_engine),
                 pdu,
-                (None, snmp_engine),  # custom acInfo
+                #(None, snmp_engine),  # custom acInfo
             )
 
         except NoDataNotification:
@@ -173,7 +173,7 @@ class SetCommandResponder(cmdrsp.SetCommandResponder):
                 state_reference,
                 probe_hash_context(self, snmp_engine),
                 pdu,
-                (None, snmp_engine),  # custom acInfo
+                #(None, snmp_engine),  # custom acInfo
             )
 
         except NoDataNotification:
@@ -193,7 +193,7 @@ class NextCommandResponder(cmdrsp.NextCommandResponder):
                 state_reference,
                 probe_hash_context(self, snmp_engine),
                 pdu,
-                (None, snmp_engine),  # custom acInfo
+                #(None, snmp_engine),  # custom acInfo
             )
 
         except NoDataNotification:
@@ -202,7 +202,7 @@ class NextCommandResponder(cmdrsp.NextCommandResponder):
 
 class BulkCommandResponder(cmdrsp.BulkCommandResponder):
     """v3arch GETBULK command handler"""
-
+ 
     def handleMgmtOperation(
         self, snmp_engine, state_reference, context_name, pdu, ac_info
     ):
@@ -213,9 +213,9 @@ class BulkCommandResponder(cmdrsp.BulkCommandResponder):
                 state_reference,
                 probe_hash_context(self, snmp_engine),
                 pdu,
-                (None, snmp_engine),  # custom acInfo
+                #(None, snmp_engine),  # custom acInfo
             )
-
+ 
         except NoDataNotification:
             self.releaseStateInformation(state_reference)
 
@@ -535,7 +535,7 @@ configured automatically based on simulation data file paths relative to
         return 1
 
     if args.debug:
-        pysnmp_debug.setLogger(pysnmp_debug.Debug(*args.debug))
+        pysnmp_debug.set_logger(pysnmp_debug.Debug(*args.debug))
 
     if args.debug_asn1:
         pyasn1_debug.setLogger(pyasn1_debug.Debug(*args.debug_asn1))
@@ -684,17 +684,17 @@ configured automatically based on simulation data file paths relative to
 
                 if not args.v3_only:
                     # snmpCommunityTable::snmpCommunityIndex can't be > 32
-                    config.addV1System(
+                    config.add_v1_system(
                         snmp_engine,
                         agent_name,
                         community_name,
                         contextName=context_name,
                     )
 
-                snmp_context.registerContextName(context_name, mib_instrum)
+                snmp_context.register_context_name(context_name, mib_instrum)
 
                 if len(community_name) <= 32:
-                    snmp_context.registerContextName(community_name, mib_instrum)
+                    snmp_context.register_context_name(community_name, mib_instrum)
 
                 data_index_instrum_controller.add_data_file(
                     full_path, community_name, context_name
@@ -726,7 +726,7 @@ configured automatically based on simulation data file paths relative to
 
     transport_dispatcher = AsyncioDispatcher()
 
-    transport_dispatcher.registerRoutingCbFun(lambda td, t, d: td)
+    transport_dispatcher.register_routing_callback(lambda td, t, d: td)
 
     if not snmp_args or snmp_args[0][0] != "--v3-engine-id":
         snmp_args.insert(0, ("--v3-engine-id", "auto"))
@@ -768,7 +768,7 @@ configured automatically based on simulation data file paths relative to
                         snmp_engine, v3_context_engine_id
                     )
                     # unregister default context
-                    snmp_context.unregisterContextName(b"")
+                    snmp_context.unregister_context_name(b"")
 
                     log.info(
                         "SNMPv3 Context Engine ID: "
@@ -789,7 +789,7 @@ configured automatically based on simulation data file paths relative to
 
                 # Configure access to data index
 
-                config.addV1System(snmp_engine, "index", "index", contextName="index")
+                config.add_v1_system(snmp_engine, "index", "index", contextName="index")
 
                 log.info("--- SNMPv3 USM configuration")
 
@@ -833,9 +833,9 @@ configured automatically based on simulation data file paths relative to
 
                     if (
                         AUTH_PROTOCOLS[v3_auth_protos[v3User]]
-                        == config.usmNoAuthProtocol
+                        == config.USM_AUTH_NONE
                         and PRIV_PROTOCOLS[v3_priv_protos[v3User]]
-                        != config.usmNoPrivProtocol
+                        != config.USM_PRIV_NONE
                     ):
                         log.error(
                             "privacy impossible without authentication for USM user "
@@ -844,7 +844,7 @@ configured automatically based on simulation data file paths relative to
                         return 1
 
                     try:
-                        config.addV3User(
+                        config.add_v3_user(
                             snmp_engine,
                             v3User,
                             AUTH_PROTOCOLS[v3_auth_protos[v3User]],
@@ -861,7 +861,7 @@ configured automatically based on simulation data file paths relative to
 
                     if (
                         AUTH_PROTOCOLS[v3_auth_protos[v3User]]
-                        != config.usmNoAuthProtocol
+                        != config.USM_AUTH_NONE
                     ):
                         log.info(
                             "SNMPv3 USM authentication key: %s, "
@@ -871,7 +871,7 @@ configured automatically based on simulation data file paths relative to
 
                     if (
                         PRIV_PROTOCOLS[v3_priv_protos[v3User]]
-                        != config.usmNoPrivProtocol
+                        != config.USM_PRIV_NONE
                     ):
                         log.info(
                             "SNMPv3 USM encryption (privacy) key: %s, "
@@ -879,7 +879,7 @@ configured automatically based on simulation data file paths relative to
                             "%s" % (v3_priv_keys[v3User], v3_priv_protos[v3User])
                         )
 
-                snmp_context.registerContextName("index", data_index_instrum_controller)
+                snmp_context.register_context_name("index", data_index_instrum_controller)
 
                 log.info(
                     "Maximum number of variable bindings in SNMP response: "
@@ -896,14 +896,14 @@ configured automatically based on simulation data file paths relative to
                     return 1
 
                 for agent_udpv4_endpoint in agent_udpv4_endpoints:
-                    transport_domain = udp.domainName + (transport_index["udpv4"],)
+                    transport_domain = udp.DOMAIN_NAME + (transport_index["udpv4"],)
                     transport_index["udpv4"] += 1
 
-                    snmp_engine.registerTransportDispatcher(
+                    snmp_engine.register_transport_dispatcher(
                         transport_dispatcher, transport_domain
                     )
 
-                    config.addSocketTransport(
+                    config.add_transport(
                         snmp_engine, transport_domain, agent_udpv4_endpoint[0]
                     )
 
@@ -920,11 +920,11 @@ configured automatically based on simulation data file paths relative to
                     transport_domain = udp6.domainName + (transport_index["udpv6"],)
                     transport_index["udpv6"] += 1
 
-                    snmp_engine.registerTransportDispatcher(
+                    snmp_engine.register_transport_dispatcher(
                         transport_dispatcher, transport_domain
                     )
 
-                    config.addSocketTransport(
+                    config.add_transport(
                         snmp_engine, transport_domain, agent_udpv6_endpoint[0]
                     )
 
@@ -950,7 +950,7 @@ configured automatically based on simulation data file paths relative to
                 if opt[0] == "end-of-options":
                     # Load up the rest of MIBs while running privileged
                     (
-                        snmp_engine.msgAndPduDsp.mibInstrumController.mibBuilder.loadModules()
+                        snmp_engine.message_dispatcher.mib_instrum_controller.get_mib_builder().load_modules()
                     )
                     break
 
@@ -985,7 +985,7 @@ configured automatically based on simulation data file paths relative to
                 )
                 return 1
 
-            config.addContext(snmp_engine, "")
+            config.add_context(snmp_engine, "")
 
         elif opt[0] == "--v3-context-engine-id":
             v3_context_engine_ids.append((univ.OctetString(hexValue=opt[1]), []))
@@ -1066,11 +1066,11 @@ configured automatically based on simulation data file paths relative to
         elif opt[0] == "--timeout":
             timeout = opt[1]
 
-    transport_dispatcher.jobStarted(1)  # server job would never finish
+    transport_dispatcher.job_started(1)  # server job would never finish
 
     with daemon.PrivilegesOf(args.process_user, args.process_group, final=True):
         try:
-            transport_dispatcher.runDispatcher(float(timeout))
+            transport_dispatcher.run_dispatcher(float(timeout))
 
         except KeyboardInterrupt:
             log.info("Shutting down process...")
@@ -1092,7 +1092,7 @@ configured automatically based on simulation data file paths relative to
                     else:
                         log.info('Variation module "%s" shutdown OK' % name)
 
-            transport_dispatcher.closeDispatcher()
+            transport_dispatcher.close_dispatcher()
 
             log.info("Process terminated")
 

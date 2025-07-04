@@ -12,7 +12,6 @@ import stat
 from pyasn1.type import univ
 from pysnmp.carrier.asyncio.dgram import udp
 from pysnmp.carrier.asyncio.dgram import udp6
-from pysnmp.carrier.asyncio.dgram import unix
 from pysnmp.proto import rfc1902
 from pysnmp.smi import exval
 from pysnmp.smi.error import MibOperationError
@@ -101,7 +100,7 @@ class DataFile(AbstractLayout):
             )
         )
 
-        separator = b","
+        separator = ","
 
         for oid, val in var_binds:
             text_oid = str(univ.OctetString(".".join(["%s" % x for x in oid])))
@@ -116,7 +115,9 @@ class DataFile(AbstractLayout):
                 subtree_flag = exact_match = False
 
             else:
-                offset, subtree_flag, prev_offset = line.split(separator, 2)
+                linestr = line.decode("utf-8")
+                linestr.split(separator, 2)
+                offset, subtree_flag, prev_offset = linestr.split(separator, 2)
                 subtree_flag, exact_match = int(subtree_flag), True
 
             offset = int(offset)
@@ -342,9 +343,6 @@ def probe_context(transport_domain, transport_address, context_engine_id, contex
 
     elif udp6 and transport_domain[: len(udp6.domainName)] == udp6.domainName:
         candidate.append(str(transport_address[0]).replace(":", "_"))
-
-    elif unix and transport_domain[: len(unix.domainName)] == unix.domainName:
-        candidate.append(transport_address)
 
     candidate = [str(x) for x in candidate if x]
 

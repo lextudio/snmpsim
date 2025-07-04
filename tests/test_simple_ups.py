@@ -5,7 +5,7 @@ import time
 from snmpsim.commands.responder import main as responder_main
 import pytest
 from pysnmp.hlapi.asyncio import *
-from pysnmp.hlapi.asyncio.slim import Slim
+from pysnmp.hlapi.v1arch.asyncio.slim import Slim
 
 import asyncio
 
@@ -113,10 +113,11 @@ async def test_main_with_specific_args(run_app_in_background, capsys):
             authProtocol=usmHMACMD5AuthProtocol,
             privProtocol=usmDESPrivProtocol,
         )
-        errorIndication, errorStatus, errorIndex, varBinds = await getCmd(
+        transport = await UdpTransportTarget.create(("localhost", PORT_NUMBER), retries=0)
+        errorIndication, errorStatus, errorIndex, varBinds = await get_cmd(
             snmpEngine,
             authData,
-            UdpTransportTarget(("localhost", PORT_NUMBER), retries=0),
+            transport,
             ContextData(contextName=OctetString("public").asOctets()),
             ObjectType(ObjectIdentity("SNMPv2-MIB", "sysDescr", 0)),
             retries=0,
@@ -133,8 +134,8 @@ async def test_main_with_specific_args(run_app_in_background, capsys):
         assert isinstance(varBinds[0][1], OctetString)
 
     finally:
-        if snmpEngine.transportDispatcher:
-            snmpEngine.transportDispatcher.closeDispatcher()
+        if snmpEngine.transport_dispatcher:
+            snmpEngine.transport_dispatcher.close_dispatcher()
 
         await asyncio.sleep(TIME_OUT)
     # Rest of your test code...

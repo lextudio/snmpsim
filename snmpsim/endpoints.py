@@ -42,7 +42,7 @@ class IPv4TransportEndpoints(TransportEndpointsBase):
         except Exception:
             raise SnmpsimError("improper IPv4/UDP endpoint %s" % addr)
 
-        return udp.UdpTransport().openServerMode((h, p)), addr
+        return udp.UdpTransport().open_server_mode((h, p)), addr
 
 
 class IPv6TransportEndpoints(TransportEndpointsBase):

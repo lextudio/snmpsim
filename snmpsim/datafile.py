@@ -141,7 +141,7 @@ class DataFile(AbstractLayout):
                             try:
                                 _, subtree_flag, _ = self._record_index.lookup(
                                     str(_next_oid)
-                                ).split(separator, 2)
+                                ).split(b',', 2)
 
                             except KeyError:
                                 log.error(
@@ -166,7 +166,7 @@ class DataFile(AbstractLayout):
 
                     try:
                         _, _, _prev_offset = self._record_index.lookup(str(_oid)).split(
-                            separator, 2
+                            b',', 2
                         )
 
                     except KeyError:

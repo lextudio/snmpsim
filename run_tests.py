@@ -49,7 +49,7 @@ def main():
         command.append("-v")
 
     if args.coverage:
-        command.extend(["--cov=pysnmp", "--cov-report=term", "--cov-report=html"])
+        command.extend(["--cov=pysnmp", "--cov-report=term"])
 
     if args.test_file:
         command.append(args.test_file)

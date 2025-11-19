@@ -22,3 +22,4 @@ build/
 venv*
 *.komodoproject
 .python-version
+.uv-cache/

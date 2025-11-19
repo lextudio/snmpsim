@@ -1,10 +1,18 @@
-[tool.poetry]
+[build-system]
+requires = ["hatchling>=1.21.0"]
+build-backend = "hatchling.build"
+
+[project]
 name = "snmpsim"
 version = "1.1.7"
 description = "SNMP Simulator is a tool that acts as multitude of SNMP Agents built into real physical devices, from SNMP Manager's point of view. Simulator builds and uses a database of physical devices' SNMP footprints to respond like their original counterparts do."
-authors = ["Ilya Etingof <etingof@gmail.com>", "LeXtudio Inc. <support@lextudio.com>"]
-license = "BSD-2-Clause"
-repository = "https://github.com/lextudio/snmpsim"
+readme = "README.md"
+requires-python = ">=3.10,<4.0"
+license = { text = "BSD-2-Clause" }
+authors = [
+    { name = "Ilya Etingof", email = "etingof@gmail.com" },
+    { name = "LeXtudio Inc.", email = "support@lextudio.com" },
+]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
@@ -18,50 +26,64 @@ classifiers = [
     "Operating System :: OS Independent",
     "Topic :: Communications",
     "Topic :: System :: Monitoring",
-    "Topic :: System :: Networking :: Monitoring"
+    "Topic :: System :: Networking :: Monitoring",
 ]
-readme = "README.md"
-
-packages = [
-    { include = "snmpsim" },
+dependencies = [
+    "pysnmp>=7.1.0,<8.0.0",
 ]
-include = ["docs"]
 
+[project.urls]
+Repository = "https://github.com/lextudio/snmpsim"
 
-[tool.poetry.dependencies]
-python = "^3.9"
-pysnmp = "^7.1.0"
-
-[tool.poetry.group.dev.dependencies]
-codecov = "^2.1.12"
-cryptography = "^43.0.0"
-pysmi = "^1.5.0"
-pytest = "^7.2.0"
-pytest-asyncio = "^0.21.1"
-pytest-codecov = "^0.4.0"
-Sphinx = "^7.0.0"
-sphinx-copybutton = "^0.5.2"
-sphinx-sitemap-lextudio = "^2.5.2"
-furo = "^2024.1.1"
-black = "23.1.0"
-pre-commit = "2.21.0"
-doc8 = "^1.1.1"
-sphinx-notfound-page = "^1.0.0"
-
-[tool.poetry_bumpversion.file."snmpsim/__init__.py"]
-
-[tool.poetry_bumpversion.file."docs/source/conf.py"]
-search = "release = \"{current_version}\""
-replace = "release = \"{new_version}\""
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
+[project.scripts]
 snmpsim-manage-records = "snmpsim.commands.rec2rec:main"
 snmpsim-record-mibs = "snmpsim.commands.mib2rec:main"
 snmpsim-record-traffic = "snmpsim.commands.pcap2rec:main"
 snmpsim-record-commands = "snmpsim.commands.cmd2rec:main"
 snmpsim-command-responder = "snmpsim.commands.responder:main"
 snmpsim-command-responder-lite = "snmpsim.commands.responder_lite:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["snmpsim"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "snmpsim",
+    "docs",
+    "README.md",
+    "CHANGES.rst",
+    "THANKS.txt",
+    "TODO.txt",
+    "LICENSE.txt",
+    "MANIFEST.in",
+]
+
+[project.optional-dependencies]
+dev = [
+    "codecov>=2.1.12",
+    "codecov<3.0.0",
+    "cryptography>=43.0.0",
+    "cryptography<44.0.0",
+    "pysmi>=1.5.0",
+    "pysmi<2.0.0",
+    "pytest>=7.2.0",
+    "pytest<8.0.0",
+    "pytest-asyncio>=0.21.1",
+    "pytest-asyncio<0.22.0",
+    "pytest-codecov>=0.4.0",
+    "pytest-codecov<1.0.0",
+    "Sphinx>=7.0.0",
+    "Sphinx<8.0.0",
+    "sphinx-copybutton>=0.5.2",
+    "sphinx-copybutton<0.6.0",
+    "sphinx-sitemap-lextudio>=2.5.2",
+    "sphinx-sitemap-lextudio<3.0.0",
+    "furo>=2024.1.1",
+    "furo<2025.0.0",
+    "black==23.1.0",
+    "pre-commit==2.21.0",
+    "doc8>=1.1.1",
+    "doc8<2.0.0",
+    "sphinx-notfound-page>=1.0.0",
+    "sphinx-notfound-page<2.0.0",
+]

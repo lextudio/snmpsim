@@ -21,4 +21,3 @@ might query those simulated agents to test its own behavior.
    building-simulation-data
    recording-with-variation-modules
    tips-and-tricks
-

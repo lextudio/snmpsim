@@ -1,3 +1,8 @@
+Revision 1.2.0, released on Nov 19, 2025
+----------------------------------------
+
+- Upgraded pysnmp to 7.1.
+
 Revision 1.1.7, released on Sep 13, 2024
 ----------------------------------------
 

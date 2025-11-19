@@ -29,7 +29,8 @@ classifiers = [
     "Topic :: System :: Networking :: Monitoring",
 ]
 dependencies = [
-    "pysnmp>=7.1.0,<8.0.0",
+    "pysnmp>=7.1.22,<8.0.0",
+    "pysmi>=1.6.2,<2.0.0",
 ]
 
 [project.urls]

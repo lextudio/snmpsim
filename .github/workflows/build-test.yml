@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
     steps:
       - uses: actions/checkout@v4
       - name: Setup python
@@ -23,17 +23,28 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
-      - name: Run image
-        uses: abatilo/actions-poetry@v2
+      - name: Cache uv
+        uses: actions/cache@v4
         with:
-          poetry-version: "1.6.1"
+          path: ~/.cache/uv
+          key: uv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            uv-${{ runner.os }}-${{ matrix.python-version }}-
+      - name: Install uv
+        shell: bash
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "${HOME}/.local/bin" >> "$GITHUB_PATH"
+          uv --version
+      - name: Sync dependencies
+        run: |
+          python run_prepare.py ${{ matrix.python-version }}
       - name: Build
         run: |
-          poetry install
-          poetry build
+          python run_build.py
       - name: Test
         run: |
-          poetry run pytest --junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov=com --cov-report=xml --cov-report=html
+          python run_tests.py --coverage --args "--junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov-report=xml --cov-report=html"
       - name: Test summary
         uses: test-summary/action@v2
         with:

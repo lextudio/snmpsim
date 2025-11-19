@@ -65,17 +65,6 @@ def main():
     # Run the command
     subprocess.run(command, check=True)
 
-    # Open coverage report if generated
-    if args.coverage:
-        print("\nCoverage report generated in htmlcov/index.html", file=sys.stderr)
-
-        if platform.system() == "Windows":
-            os.startfile("htmlcov\\index.html")
-        elif platform.system() == "Darwin":  # macOS
-            subprocess.run(["open", "htmlcov/index.html"], check=True)
-        elif platform.system() == "Linux":
-            subprocess.run(["xdg-open", "htmlcov/index.html"], check=True)
-
 
 if __name__ == "__main__":
     main()

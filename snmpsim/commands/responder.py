@@ -2,11 +2,13 @@
 # This file is part of snmpsim software.
 #
 # Copyright (c) 2010-2019, Ilya Etingof <etingof@gmail.com>
+# Copyright (c) 2022-2025, LeXtudio Inc. <support@lextudio.com>
 # License: https://www.pysnmp.com/snmpsim/license.html
 #
 # SNMP Agent Simulator: fully-fledged SNMP v1/v2c/v3 command responder
 #
 import argparse
+import asyncio
 import functools
 import os
 import sys
@@ -230,6 +232,12 @@ def _parse_sized_string(arg, min_length=8):
 
 
 def main():
+    # Python 3.14+ no longer auto-creates a default event loop.
+    try:
+        asyncio.get_event_loop()
+    except RuntimeError:
+        asyncio.set_event_loop(asyncio.new_event_loop())
+
     parser = argparse.ArgumentParser(add_help=False)
 
     parser.add_argument("-v", "--version", action="version", version=utils.TITLE)

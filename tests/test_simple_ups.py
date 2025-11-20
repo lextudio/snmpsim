@@ -132,7 +132,7 @@ async def test_main_with_specific_args(run_app_in_background, capsys):
         assert isinstance(varBinds[0][1], OctetString)
 
     finally:
-        if snmpEngine.transportDispatcher:
-            snmpEngine.transportDispatcher.close_dispatcher()
+        if snmpEngine.transport_dispatcher:
+            snmpEngine.transport_dispatcher.close_dispatcher()
 
         await asyncio.sleep(TIME_OUT)

@@ -2,6 +2,7 @@
 # This file is part of snmpsim software.
 #
 # Copyright (c) 2010-2019, Ilya Etingof <etingof@gmail.com>
+# Copyright (c) 2022-2025, LeXtudio Inc. <support@lextudio.com>
 # License: https://www.pysnmp.com/snmpsim/license.html
 #
 # Managed value variation module
@@ -77,12 +78,12 @@ def variate(oid, tag, value, **context):
             # receiver IDs (which we build by outbound and simulator
             # transportDomains concatenation)
             snmpEngine.register_transport_dispatcher(
-                snmpEngine.transportDispatcher,
+                snmpEngine.transport_dispatcher,
                 UdpTransportTarget.TRANSPORT_DOMAIN + context["transportDomain"],
             )
 
             snmpEngine.register_transport_dispatcher(
-                snmpEngine.transportDispatcher,
+                snmpEngine.transport_dispatcher,
                 Udp6TransportTarget.TRANSPORT_DOMAIN + context["transportDomain"],
             )
 
@@ -298,7 +299,7 @@ def variate(oid, tag, value, **context):
 
         notificationType = NotificationType(
             ObjectIdentity(args["trapoid"])
-        ).addVarBinds(*varBinds)
+        ).add_varbinds(*varBinds)
 
         run_in_new_loop(
             send_notification(

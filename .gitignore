@@ -21,5 +21,4 @@ build/
 # Virtual envs
 venv*
 *.komodoproject
-.python-version
 .uv-cache/

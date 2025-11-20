@@ -915,6 +915,7 @@ name = "snmpsim"
 version = "1.2.0"
 source = { editable = "." }
 dependencies = [
+    { name = "pysmi" },
     { name = "pysnmp" },
 ]
 
@@ -950,9 +951,10 @@ requires-dist = [
     { name = "furo", marker = "extra == 'dev'", specifier = "<2025.0.0" },
     { name = "furo", marker = "extra == 'dev'", specifier = ">=2024.1.1" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = "==2.21.0" },
+    { name = "pysmi", specifier = ">=1.6.2,<2.0.0" },
     { name = "pysmi", marker = "extra == 'dev'", specifier = "<2.0.0" },
     { name = "pysmi", marker = "extra == 'dev'", specifier = ">=1.5.0" },
-    { name = "pysnmp", specifier = ">=7.1.0,<8.0.0" },
+    { name = "pysnmp", specifier = ">=7.1.22,<8.0.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = "<8.0.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.2.0" },
     { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = "<0.22.0" },

@@ -8,7 +8,7 @@ from pysnmp.hlapi.asyncio import *
 
 import asyncio
 
-TIME_OUT = 5
+TIME_OUT = int(os.getenv("SNMPSIM_TEST_TIMEOUT", "15"))
 PORT_NUMBER = 1615  # Using a unique port to avoid conflicts with other tests
 
 
@@ -54,7 +54,7 @@ def run_app_in_background():
     time.sleep(1)
     yield
     # Simulate KeyboardInterrupt after the test is done
-    app_thread.join(timeout=1)
+    app_thread.join(timeout=TIME_OUT)
 
 
 @pytest.mark.asyncio

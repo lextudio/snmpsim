@@ -1,3 +1,10 @@
+.. current-version: 1.2.1 (managed by bump2version)
+
+Revision 1.2.1, released on Nov 19, 2025
+----------------------------------------
+
+- Fixed Python 3.14 compatibility issues.
+
 Revision 1.2.0, released on Nov 19, 2025
 ----------------------------------------
 

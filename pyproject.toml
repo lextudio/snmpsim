@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "snmpsim"
-version = "1.2.0"
+version = "1.2.1"
 description = "SNMP Simulator is a tool that acts as multitude of SNMP Agents built into real physical devices, from SNMP Manager's point of view. Simulator builds and uses a database of physical devices' SNMP footprints to respond like their original counterparts do."
 readme = "README.md"
 requires-python = ">=3.10,<4.0"

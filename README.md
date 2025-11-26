@@ -113,9 +113,9 @@ Detailed information on SNMP simulator usage could be found at
 
 For local development, this repository includes helper scripts in the `scripts/` directory:
 
-* `python scripts/run_prepare.py [version]` - Set up development environment with specified Python version
-* `python scripts/run_build.py` - Build the package
-* `python scripts/run_tests.py [--coverage]` - Run tests with optional coverage reporting
+* `python scripts/prepare.py [version]` - Set up development environment with specified Python version
+* `python scripts/build.py` - Build the package
+* `python scripts/tests.py [--coverage]` - Run tests with optional coverage reporting
 
 With `uv`, these scripts automatically handle virtual environment creation, dependency installation, and build processes.
 

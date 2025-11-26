@@ -31,13 +31,13 @@ jobs:
         run: |
           uv --version
           uv python pin ${{ matrix.python-version }}
-          python run_prepare.py
+          python scripts/run_prepare.py
       - name: Build
         run: |
-          python run_build.py
+          python scripts/run_build.py
       - name: Test
         run: |
-          python run_tests.py --coverage --args "--junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov-report=xml"
+          python scripts/run_tests.py --coverage --args "--junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov-report=xml"
       - name: Test summary
         uses: test-summary/action@v2
         with:

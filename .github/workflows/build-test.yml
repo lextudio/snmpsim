@@ -39,7 +39,7 @@ jobs:
           python scripts/build.py
       - name: Test
         run: |
-          python scripts/tests.py --coverage --args "--junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov-report=xml"
+          python scripts/tests.py --coverage --args "--junitxml=junit/test-results-${{ matrix.os }}-${{ matrix.python-version }}.xml --cov-report=xml"
       - name: Test summary
         uses: test-summary/action@v2
         with:

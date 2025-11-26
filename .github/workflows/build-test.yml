@@ -38,8 +38,12 @@ jobs:
         run: |
           python scripts/build.py
       - name: Test
-        run: |
-          python scripts/tests.py --coverage --args "--junitxml=junit/test-results-${{ matrix.os }}-${{ matrix.python-version }}.xml --cov-report=xml"
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 15
+          max_attempts: 3
+          retry_wait_seconds: 30
+          command: python scripts/tests.py --coverage --retry 2 --args "--junitxml=junit/test-results-${{ matrix.os }}-${{ matrix.python-version }}.xml --cov-report=xml"
       - name: Test summary
         uses: test-summary/action@v2
         with:

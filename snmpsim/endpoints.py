@@ -65,7 +65,7 @@ class IPv6TransportEndpoints(TransportEndpointsBase):
         else:
             h, p = addr, 161
 
-        return udp6.Udp6Transport().openServerMode((h, p)), addr
+        return udp6.Udp6Transport().open_server_mode((h, p)), addr
 
 
 def parse_endpoint(arg, ipv6=False):

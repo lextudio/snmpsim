@@ -336,10 +336,10 @@ def probe_context(transport_domain, transport_address, context_engine_id, contex
         # try legacy layout w/o contextEngineId in the path
         candidate = [context_name, ".".join([str(x) for x in transport_domain])]
 
-    if transport_domain[: len(udp.domainName)] == udp.domainName:
+    if transport_domain[: len(udp.DOMAIN_NAME)] == udp.DOMAIN_NAME:
         candidate.append(transport_address[0])
 
-    elif udp6 and transport_domain[: len(udp6.domainName)] == udp6.domainName:
+    elif udp6 and transport_domain[: len(udp6.DOMAIN_NAME)] == udp6.DOMAIN_NAME:
         candidate.append(str(transport_address[0]).replace(":", "_"))
 
     candidate = [str(x) for x in candidate if x]

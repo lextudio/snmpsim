@@ -26,7 +26,7 @@ class MibInstrumController:
         return str(self._data_file)
 
     def _get_call_context(self, next_flag=False, set_flag=False, **context):
-        if context is None:
+        if not context:
             return {"nextFlag": next_flag, "setFlag": set_flag}
 
         snmp_engine = context["snmpEngine"]  # we injected snmpEngine object earlier

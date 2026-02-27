@@ -298,7 +298,7 @@ def main():
     args = parser.parse_args()
 
     if args.debug:
-        pysnmp_debug.setLogger(pysnmp_debug.Debug(*args.debug))
+        pysnmp_debug.set_logger(pysnmp_debug.Debug(*args.debug))
 
     if args.debug_asn1:
         pyasn1_debug.setLogger(pyasn1_debug.Debug(*args.debug_asn1))
@@ -511,9 +511,9 @@ def main():
     if isinstance(args.start_object, ObjectIdentity) or isinstance(
         args.stop_object, ObjectIdentity
     ):
-        compiler.addMibCompiler(snmp_engine.getMibBuilder(), sources=args.mib_sources)
+        compiler.addMibCompiler(snmp_engine.get_mib_builder(), sources=args.mib_sources)
 
-        mib_view_controller = view.MibViewController(snmp_engine.getMibBuilder())
+        mib_view_controller = view.MibViewController(snmp_engine.get_mib_builder())
 
         try:
             if isinstance(args.start_object, ObjectIdentity):
@@ -620,7 +620,7 @@ def main():
 
                 # initiate another SNMP walk iteration
                 if args.use_getbulk:
-                    cmd_gen.sendVarBinds(
+                    cmd_gen.send_varbinds(
                         snmp_engine,
                         "tgt",
                         args.v3_context_engine_id,
@@ -633,7 +633,7 @@ def main():
                     )
 
                 else:
-                    cmd_gen.sendVarBinds(
+                    cmd_gen.send_varbinds(
                         snmp_engine,
                         "tgt",
                         args.v3_context_engine_id,
@@ -713,7 +713,7 @@ def main():
 
                     # initiate another SNMP walk iteration
                     if args.use_getbulk:
-                        cmd_gen.sendVarBinds(
+                        cmd_gen.send_var_binds(
                             snmp_engine,
                             "tgt",
                             args.v3_context_engine_id,
@@ -726,7 +726,7 @@ def main():
                         )
 
                     else:
-                        cmd_gen.sendVarBinds(
+                        cmd_gen.send_var_binds(
                             snmp_engine,
                             "tgt",
                             args.v3_context_engine_id,
@@ -776,7 +776,7 @@ def main():
     if args.use_getbulk:
         cmd_gen = cmdgen.BulkCommandGenerator()
 
-        cmd_gen.sendVarBinds(
+        cmd_gen.send_varbinds(
             snmp_engine,
             "tgt",
             args.v3_context_engine_id,
@@ -791,7 +791,7 @@ def main():
     else:
         cmd_gen = cmdgen.NextCommandGenerator()
 
-        cmd_gen.sendVarBinds(
+        cmd_gen.send_varbinds(
             snmp_engine,
             "tgt",
             args.v3_context_engine_id,
@@ -814,7 +814,7 @@ def main():
     started = time.time()
 
     try:
-        snmp_engine.transportDispatcher.runDispatcher()
+        snmp_engine.transport_dispatcher.run_dispatcher()
 
     except KeyboardInterrupt:
         log.info("Shutting down process...")

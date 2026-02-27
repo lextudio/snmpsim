@@ -756,11 +756,40 @@ def main():
                         % (cb_ctx["iteration"], cb_ctx["count"])
                     )
 
-        # Next request time
-        cb_ctx["reqTime"] = time.time()
-
         # Continue walking
-        return not stop_flag
+        if not stop_flag:
+            # Next request time
+            cb_ctx["reqTime"] = time.time()
+
+            if args.use_getbulk:
+                cmd_gen.send_varbinds(
+                    snmp_engine,
+                    "tgt",
+                    args.v3_context_engine_id,
+                    args.v3_context_name,
+                    args.getbulk_repetitions,
+                    var_bind_table,
+                    cbFun,
+                    cb_ctx,
+                )
+
+            else:
+                cmd_gen.send_varbinds(
+                    snmp_engine,
+                    "tgt",
+                    args.v3_context_engine_id,
+                    args.v3_context_name,
+                    var_bind_table,
+                    cbFun,
+                    cb_ctx,
+                )
+
+            return not stop_flag
+
+        # End of walk, stop the dispatcher loop and close it
+        if snmp_engine.transport_dispatcher.loop.is_running():
+            snmp_engine.transport_dispatcher.loop.stop()
+        snmp_engine.transport_dispatcher.close_dispatcher()
 
     cb_ctx = {
         "total": 0,

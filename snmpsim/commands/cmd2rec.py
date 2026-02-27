@@ -657,105 +657,104 @@ def main():
 
         # Walk var-binds
         for var_bind_row in var_bind_table:
-            for oid, value in var_bind_row:
-                # EOM
-                if args.stop_object and oid >= args.stop_object:
-                    stop_flag = True  # stop on out of range condition
+            oid, value = var_bind_row
+            # EOM
+            if args.stop_object and oid >= args.stop_object:
+                stop_flag = True  # stop on out of range condition
 
-                elif value is None or value.tagSet in (
-                    rfc1905.NoSuchObject.tagSet,
-                    rfc1905.NoSuchInstance.tagSet,
-                    rfc1905.EndOfMibView.tagSet,
-                ):
-                    stop_flag = True
+            elif value is None or value.tagSet in (
+                rfc1905.NoSuchObject.tagSet,
+                rfc1905.NoSuchInstance.tagSet,
+                rfc1905.EndOfMibView.tagSet,
+            ):
+                stop_flag = True
 
-                # remove value enumeration
-                if value.tagSet == rfc1902.Integer32.tagSet:
-                    value = rfc1902.Integer32(value)
+            # remove value enumeration
+            if value.tagSet == rfc1902.Integer32.tagSet:
+                value = rfc1902.Integer32(value)
 
-                if value.tagSet == rfc1902.Unsigned32.tagSet:
-                    value = rfc1902.Unsigned32(value)
+            if value.tagSet == rfc1902.Unsigned32.tagSet:
+                value = rfc1902.Unsigned32(value)
 
-                if value.tagSet == rfc1902.Bits.tagSet:
-                    value = rfc1902.OctetString(value)
+            if value.tagSet == rfc1902.Bits.tagSet:
+                value = rfc1902.OctetString(value)
 
-                # Build .snmprec record
+            # Build .snmprec record
 
-                context = {
-                    "origOid": oid,
-                    "origValue": value,
-                    "count": cb_ctx["count"],
-                    "total": cb_ctx["total"],
-                    "iteration": cb_ctx["iteration"],
-                    "reqTime": cb_ctx["reqTime"],
-                    "args.start_object": args.start_object,
-                    "stopOID": args.stop_object,
-                    "stopFlag": stop_flag,
-                    "variationModule": variation_module,
-                }
+            context = {
+                "origOid": oid,
+                "origValue": value,
+                "count": cb_ctx["count"],
+                "total": cb_ctx["total"],
+                "iteration": cb_ctx["iteration"],
+                "reqTime": cb_ctx["reqTime"],
+                "args.start_object": args.start_object,
+                "stopOID": args.stop_object,
+                "stopFlag": stop_flag,
+                "variationModule": variation_module,
+            }
 
-                try:
-                    line = data_file_handler.format(oid, value, **context)
+            try:
+                line = data_file_handler.format(oid, value, **context)
 
-                except error.MoreDataNotification as exc:
-                    cb_ctx["count"] = 0
-                    cb_ctx["iteration"] += 1
+            except error.MoreDataNotification as exc:
+                cb_ctx["count"] = 0
+                cb_ctx["iteration"] += 1
 
-                    more_data_notification = exc
+                more_data_notification = exc
 
-                    if "period" in more_data_notification:
-                        log.info(
-                            "%s OIDs dumped, waiting %.2f sec(s)"
-                            "..." % (cb_ctx["total"], more_data_notification["period"])
-                        )
+                if "period" in more_data_notification:
+                    log.info(
+                        "%s OIDs dumped, waiting %.2f sec(s)"
+                        "..." % (cb_ctx["total"], more_data_notification["period"])
+                    )
 
-                        time.sleep(more_data_notification["period"])
+                    time.sleep(more_data_notification["period"])
 
-                    # initiate another SNMP walk iteration
-                    if args.use_getbulk:
-                        cmd_gen.send_var_binds(
-                            snmp_engine,
-                            "tgt",
-                            args.v3_context_engine_id,
-                            args.v3_context_name,
-                            0,
-                            args.getbulk_repetitions,
-                            [(args.start_object, None)],
-                            cbFun,
-                            cb_ctx,
-                        )
-
-                    else:
-                        cmd_gen.send_var_binds(
-                            snmp_engine,
-                            "tgt",
-                            args.v3_context_engine_id,
-                            args.v3_context_name,
-                            [(args.start_object, None)],
-                            cbFun,
-                            cb_ctx,
-                        )
-
-                    stop_flag = True  # stop current iteration
-
-                except error.NoDataNotification:
-                    pass
-
-                except error.SnmpsimError as exc:
-                    log.error(exc)
-                    continue
+                # initiate another SNMP walk iteration
+                if args.use_getbulk:
+                    cmd_gen.send_varbinds(
+                        snmp_engine,
+                        "tgt",
+                        args.v3_context_engine_id,
+                        args.v3_context_name,
+                        args.getbulk_repetitions,
+                        [(args.start_object, None)],
+                        cbFun,
+                        cb_ctx,
+                    )
 
                 else:
-                    args.output_file.write(line)
+                    cmd_gen.send_varbinds(
+                        snmp_engine,
+                        "tgt",
+                        args.v3_context_engine_id,
+                        args.v3_context_name,
+                        [(args.start_object, None)],
+                        cbFun,
+                        cb_ctx,
+                    )
 
-                    cb_ctx["count"] += 1
-                    cb_ctx["total"] += 1
+                stop_flag = True  # stop current iteration
 
-                    if cb_ctx["count"] % 100 == 0:
-                        log.info(
-                            "OIDs dumped: %s/%s"
-                            % (cb_ctx["iteration"], cb_ctx["count"])
-                        )
+            except error.NoDataNotification:
+                pass
+
+            except error.SnmpsimError as exc:
+                log.error(exc)
+                continue
+
+            else:
+                args.output_file.write(line)
+
+                cb_ctx["count"] += 1
+                cb_ctx["total"] += 1
+
+                if cb_ctx["count"] % 100 == 0:
+                    log.info(
+                        "OIDs dumped: %s/%s"
+                        % (cb_ctx["iteration"], cb_ctx["count"])
+                    )
 
         # Next request time
         cb_ctx["reqTime"] = time.time()

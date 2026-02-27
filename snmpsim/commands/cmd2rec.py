@@ -127,9 +127,9 @@ def main():
 
     v1arch_group.add_argument(
         "--protocol-version",
-        choices=["1", "2c"],
+        choices=["1", "2c", "3"],
         default="2c",
-        help="SNMPv1/v2c protocol version",
+        help="SNMPv1/v2c/v3 protocol version",
     )
 
     v1arch_group.add_argument(

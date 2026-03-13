@@ -381,7 +381,7 @@ def main():
             M = min(M, int(args.max_var_binds / R))
 
         if N:
-            rsp_var_binds = read_next_vars(req_var_binds[:N])
+            rsp_var_binds = read_next_vars(*req_var_binds[:N])
 
         else:
             rsp_var_binds = []
@@ -389,7 +389,7 @@ def main():
         var_binds = req_var_binds[-R:]
 
         while M and R:
-            rsp_var_binds.extend(read_next_vars(var_binds))
+            rsp_var_binds.extend(read_next_vars(*var_binds))
             var_binds = rsp_var_binds[-R:]
             M -= 1
 
@@ -402,8 +402,8 @@ def main():
         while whole_msg:
             msg_ver = api.decodeMessageVersion(whole_msg)
 
-            if msg_ver in api.protoModules:
-                p_mod = api.protoModules[msg_ver]
+            if msg_ver in api.PROTOCOL_MODULES:
+                p_mod = api.PROTOCOL_MODULES[msg_ver]
 
             else:
                 log.error(f"Unsupported SNMP version {msg_ver}")
@@ -449,18 +449,18 @@ def main():
                 )
                 return whole_msg
 
-            rsp_msg = p_mod.apiMessage.getResponse(req_msg)
-            rsp_pdu = p_mod.apiMessage.getPDU(rsp_msg)
-            req_pdu = p_mod.apiMessage.getPDU(req_msg)
+            rsp_msg = p_mod.apiMessage.get_response(req_msg)
+            rsp_pdu = p_mod.apiMessage.get_pdu(rsp_msg)
+            req_pdu = p_mod.apiMessage.get_pdu(req_msg)
 
             if req_pdu.isSameTypeWith(p_mod.GetRequestPDU()):
-                backend_fun = contexts[community_name].readVars
+                backend_fun = contexts[community_name].read_variables
 
             elif req_pdu.isSameTypeWith(p_mod.SetRequestPDU()):
-                backend_fun = contexts[community_name].writeVars
+                backend_fun = contexts[community_name].write_variables
 
             elif req_pdu.isSameTypeWith(p_mod.GetNextRequestPDU()):
-                backend_fun = contexts[community_name].readNextVars
+                backend_fun = contexts[community_name].read_next_variables
 
             elif hasattr(p_mod, "GetBulkRequestPDU") and req_pdu.isSameTypeWith(
                 p_mod.GetBulkRequestPDU()
@@ -472,12 +472,12 @@ def main():
                     )
                     return whole_msg
 
-                def backend_fun(var_binds):
+                def backend_fun(*var_binds):
                     return get_bulk_handler(
                         var_binds,
-                        p_mod.apiBulkPDU.getNonRepeaters(req_pdu),
-                        p_mod.apiBulkPDU.getMaxRepetitions(req_pdu),
-                        contexts[community_name].readNextVars,
+                        p_mod.apiBulkPDU.get_non_repeaters(req_pdu),
+                        p_mod.apiBulkPDU.get_max_repetitions(req_pdu),
+                        contexts[community_name].read_next_variables,
                     )
 
             else:
@@ -489,7 +489,7 @@ def main():
                 return whole_msg
 
             try:
-                var_binds = backend_fun(p_mod.apiPDU.getVarBinds(req_pdu))
+                var_binds = backend_fun(*p_mod.apiPDU.get_varbinds(req_pdu))
 
             except NoDataNotification:
                 return whole_msg
@@ -503,18 +503,18 @@ def main():
                     oid, val = var_binds[idx]
 
                     if val.tagSet in SNMP_2TO1_ERROR_MAP:
-                        var_binds = p_mod.apiPDU.getVarBinds(req_pdu)
+                        var_binds = p_mod.apiPDU.get_varbinds(req_pdu)
 
-                        p_mod.apiPDU.setErrorStatus(
+                        p_mod.apiPDU.set_error_status(
                             rsp_pdu, SNMP_2TO1_ERROR_MAP[val.tagSet]
                         )
-                        p_mod.apiPDU.setErrorIndex(rsp_pdu, idx + 1)
+                        p_mod.apiPDU.set_error_index(rsp_pdu, idx + 1)
 
                         break
 
-            p_mod.apiPDU.setVarBinds(rsp_pdu, var_binds)
+            p_mod.apiPDU.set_varbinds(rsp_pdu, var_binds)
 
-            transport_dispatcher.sendMessage(
+            transport_dispatcher.send_message(
                 encoder.encode(rsp_msg), transport_domain, transport_address
             )
 
@@ -543,14 +543,14 @@ def main():
 
     transport_index = args.transport_id_offset
     for agent_udpv4_endpoint in args.agent_udpv4_endpoints:
-        transport_domain = udp.domainName + (transport_index,)
+        transport_domain = udp.DOMAIN_NAME + (transport_index,)
         transport_index += 1
 
         agent_udpv4_endpoint = endpoints.IPv4TransportEndpoints().add(
             agent_udpv4_endpoint
         )
 
-        transport_dispatcher.registerTransport(
+        transport_dispatcher.register_transport(
             transport_domain, agent_udpv4_endpoint[0]
         )
 
@@ -566,14 +566,14 @@ def main():
     transport_index = args.transport_id_offset
 
     for agent_udpv6_endpoint in args.agent_udpv6_endpoints:
-        transport_domain = udp6.domainName + (transport_index,)
+        transport_domain = udp6.DOMAIN_NAME + (transport_index,)
         transport_index += 1
 
-        agent_udpv6_endpoint = endpoints.IPv4TransportEndpoints().add(
+        agent_udpv6_endpoint = endpoints.IPv6TransportEndpoints().add(
             agent_udpv6_endpoint
         )
 
-        transport_dispatcher.registerTransport(
+        transport_dispatcher.register_transport(
             transport_domain, agent_udpv6_endpoint[0]
         )
 
@@ -586,13 +586,13 @@ def main():
             )
         )
 
-    transport_dispatcher.registerRecvCbFun(commandResponderCbFun)
+    transport_dispatcher.register_recv_callback(commandResponderCbFun)
 
-    transport_dispatcher.jobStarted(1)  # server job would never finish
+    transport_dispatcher.job_started(1)  # server job would never finish
 
     with daemon.PrivilegesOf(args.process_user, args.process_group, final=True):
         try:
-            transport_dispatcher.runDispatcher()
+            transport_dispatcher.run_dispatcher()
 
         except KeyboardInterrupt:
             log.info("Shutting down process...")
@@ -614,7 +614,7 @@ def main():
                     else:
                         log.info('Variation module "%s" shutdown OK' % name)
 
-            transport_dispatcher.closeDispatcher()
+            transport_dispatcher.close_dispatcher()
 
             log.info("Process terminated")
 

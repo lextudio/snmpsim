@@ -922,7 +922,7 @@ configured automatically based on simulation data file paths relative to
                     )
 
                 for agent_udpv6_endpoint in agent_udpv6_endpoints:
-                    transport_domain = udp6.domainName + (transport_index["udpv6"],)
+                    transport_domain = udp6.DOMAIN_NAME + (transport_index["udpv6"],)
                     transport_index["udpv6"] += 1
 
                     snmp_engine.register_transport_dispatcher(

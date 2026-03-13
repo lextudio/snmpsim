@@ -102,6 +102,7 @@ html_theme = "furo"
 # documentation.
 #
 html_theme_options = {
+    "announcement": 'Try <strong>SNMP Studio</strong>: <a href="https://www.sharpsnmp.com/#section-studio" target="_blank">Explore SNMP Studio</a>.',
     "source_repository": "https://github.com/lextudio/snmpsim",
     "source_branch": "main",
     "source_directory": "docs/source/",

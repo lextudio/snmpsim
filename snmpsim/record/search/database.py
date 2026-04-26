@@ -5,22 +5,28 @@
 # License: https://www.pysnmp.com/snmpsim/license.html
 #
 
+import dbm
 import os
 import sys
 
 from snmpsim import confdir
 from snmpsim import error
 from snmpsim import log
-from snmpsim import utils
 from snmpsim.record.search.file import get_record
 
-dbm = utils.try_load("anydbm")
-if dbm:
-    whichdb = utils.try_load("whichdb")
+# Python 3.13+ defaults to dbm.sqlite3 which fsyncs every write,
+# causing ~100x slower index builds. Override the default backend
+# to prefer gdbm or ndbm which don't have this issue.
+for _preferred in ('dbm.gnu', 'dbm.ndbm', 'dbm.dumb'):
+    try:
+        _mod = __import__(_preferred, fromlist=['open'])
+    except ImportError:
+        continue
+    dbm._defaultmod = _mod
+    dbm._modules[_preferred] = _mod
+    break
 
-else:
-    dbm = utils.try_load("dbm")
-    whichdb = dbm
+whichdb = dbm
 
 
 class RecordIndex:

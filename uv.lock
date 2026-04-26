@@ -548,6 +548,15 @@ wheels = [
 ]
 
 [[package]]
+name = "lark"
+version = "1.3.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/da/34/28fff3ab31ccff1fd4f6c7c7b0ceb2b6968d8ea4950663eadcb5720591a0/lark-1.3.1.tar.gz", hash = "sha256:b426a7a6d6d53189d318f2b6236ab5d6429eaf09259f1ca33eb716eed10d2905", size = 382732, upload-time = "2025-10-27T18:25:56.653Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/82/3d/14ce75ef66813643812f3093ab17e46d3a206942ce7376d31ec2d36229e7/lark-1.3.1-py3-none-any.whl", hash = "sha256:c629b661023a014c37da873b4ff58a817398d12635d3bbb2c5a03be7fe5d1e12", size = 113151, upload-time = "2025-10-27T18:25:54.882Z" },
+]
+
+[[package]]
 name = "markupsafe"
 version = "3.0.3"
 source = { registry = "https://pypi.org/simple" }
@@ -687,15 +696,6 @@ wheels = [
 ]
 
 [[package]]
-name = "ply"
-version = "3.11"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/e5/69/882ee5c9d017149285cab114ebeab373308ef0f874fcdac9beb90e0ac4da/ply-3.11.tar.gz", hash = "sha256:00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3", size = 159130, upload-time = "2018-02-15T19:01:31.097Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a3/58/35da89ee790598a0700ea49b2a66594140f44dec458c07e8e3d4979137fc/ply-3.11-py2.py3-none-any.whl", hash = "sha256:096f9b8350b65ebd2fd1346b12452efe5b9607f7482813ffca50c22722a807ce", size = 49567, upload-time = "2018-02-15T19:01:27.172Z" },
-]
-
-[[package]]
 name = "pre-commit"
 version = "2.21.0"
 source = { registry = "https://pypi.org/simple" }
@@ -713,11 +713,11 @@ wheels = [
 
 [[package]]
 name = "pyasn1"
-version = "0.6.1"
+version = "0.6.3"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ba/e9/01f1a64245b89f039897cb0130016d79f77d52669aae6ee7b159a6c4c018/pyasn1-0.6.1.tar.gz", hash = "sha256:6f580d2bdd84365380830acf45550f2511469f673cb4a5ae3857a3170128b034", size = 145322, upload-time = "2024-09-10T22:41:42.55Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5c/5f/6583902b6f79b399c9c40674ac384fd9cd77805f9e6205075f828ef11fb2/pyasn1-0.6.3.tar.gz", hash = "sha256:697a8ecd6d98891189184ca1fa05d1bb00e2f84b5977c481452050549c8a72cf", size = 148685, upload-time = "2026-03-17T01:06:53.382Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c8/f1/d6a797abb14f6283c0ddff96bbdd46937f64122b8c925cab503dd37f8214/pyasn1-0.6.1-py3-none-any.whl", hash = "sha256:0d632f46f2ba09143da3a8afe9e33fb6f92fa2320ab7e886e2d0f7672af84629", size = 83135, upload-time = "2024-09-11T16:00:36.122Z" },
+    { url = "https://files.pythonhosted.org/packages/5d/a0/7d793dce3fa811fe047d6ae2431c672364b462850c6235ae306c0efd025f/pyasn1-0.6.3-py3-none-any.whl", hash = "sha256:a80184d120f0864a52a073acc6fc642847d0be408e7c7252f31390c0f4eadcde", size = 83997, upload-time = "2026-03-17T01:06:52.036Z" },
 ]
 
 [[package]]
@@ -740,28 +740,28 @@ wheels = [
 
 [[package]]
 name = "pysmi"
-version = "1.6.2"
+version = "2.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "jinja2" },
-    { name = "ply" },
+    { name = "lark" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a7/80/917111aaa4bf931bbd4d9a6c89864de2304b79cba8ce49639a6440ecd5ba/pysmi-1.6.2.tar.gz", hash = "sha256:abed01673113886d10f0f336426859238fc13b5383c7e28e13dbcd5af0443ba1", size = 61955, upload-time = "2025-05-27T21:27:49.212Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ce/69/5666ed49ca34b418c3fdd9a6d7754566193ae0b9d2bc4b695ade7ef85b77/pysmi-2.0.0.tar.gz", hash = "sha256:9eeba85ed59c5de38f512fe9858ce3332864526f7efc8135b3e3f552666cf79b", size = 62315, upload-time = "2026-04-26T20:34:40.702Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1d/e9/9df627df8ed05f0f7b659cf46e5f9b940eb7ed811f308c8af93cf9d19752/pysmi-1.6.2-py3-none-any.whl", hash = "sha256:45a3a3b25b9e0465e6a49e47ba70d5eab0424f6f1131ca406ca3f385f027247e", size = 86809, upload-time = "2025-05-27T21:27:47.634Z" },
+    { url = "https://files.pythonhosted.org/packages/08/6c/646a251c5e5d0858b3956b9f0f6b7bbda538ddbf271f17da6cf3a5aebdd2/pysmi-2.0.0-py3-none-any.whl", hash = "sha256:b5f11cbfa303a325eaaa5e00f9d76aadb63b12c35b2297bde5c4978e9ca06a52", size = 87158, upload-time = "2026-04-26T20:34:39.668Z" },
 ]
 
 [[package]]
 name = "pysnmp"
-version = "7.1.22"
+version = "7.1.26"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pyasn1" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c5/f7/63a4833b675f3f85296d85f2fddaed93d76799f29a813a2d5ca2bbe7fc50/pysnmp-7.1.22.tar.gz", hash = "sha256:37ac595c7f0c1c00514505939b4dcf5b4fd5a9ffe51b0349f60bb640c11b0f77", size = 259230, upload-time = "2025-10-26T22:09:56.413Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2a/6c/f27377a0b223b0ef7b59fddac9c0432d43b84f08ac255426c23663c638dc/pysnmp-7.1.26.tar.gz", hash = "sha256:d6d28a338221418b7e9c5caaed671a3d89182f9e691d5798949565380934c71a", size = 260082, upload-time = "2026-04-26T21:28:35.804Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/25/da/9b6bc9517f6a69d03b70f43c4cfd1cca6289fdccabcf648204f2b0c6bc9b/pysnmp-7.1.22-py3-none-any.whl", hash = "sha256:57e704a6ba2bbf571d16cd5dc08b89bb3fa0ebeb5f4f26b87fececad3b3de7a6", size = 343380, upload-time = "2025-10-26T22:09:54.816Z" },
+    { url = "https://files.pythonhosted.org/packages/13/86/c16ccef6919cac40de63d118a663ecc157879f094e501f19b37618599141/pysnmp-7.1.26-py3-none-any.whl", hash = "sha256:1438f0a2c585ff59386e5d09153e752a7047a6e04efc977ebfddf3b47c8011c4", size = 344221, upload-time = "2026-04-26T21:28:34.463Z" },
 ]
 
 [[package]]
@@ -820,6 +820,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/5e/f7/c933acc76f5208b3b00089573cf6a2bc26dc80a8aece8f52bb7d6b1855ca/pytest_cov-7.0.0.tar.gz", hash = "sha256:33c97eda2e049a0c5298e91f519302a1334c26ac65c1a483d6206fd458361af1", size = 54328, upload-time = "2025-09-09T10:57:02.113Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ee/49/1377b49de7d0c1ce41292161ea0f721913fa8722c19fb9c1e3aa0367eecb/pytest_cov-7.0.0-py3-none-any.whl", hash = "sha256:3b8e9558b16cc1479da72058bdecf8073661c7f57f7d3c5f22a1c23507f2d861", size = 22424, upload-time = "2025-09-09T10:57:00.695Z" },
+]
+
+[[package]]
+name = "pytest-rerunfailures"
+version = "12.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "packaging" },
+    { name = "pytest" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/97/66/40f778791860c5234c5c677026d45c1a8708873b3dba8111de672bceac4f/pytest-rerunfailures-12.0.tar.gz", hash = "sha256:784f462fa87fe9bdf781d0027d856b47a4bfe6c12af108f6bd887057a917b48e", size = 21154, upload-time = "2023-07-05T05:53:46.014Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/25/14/e02206388902a828cc26894996dfc68eec50f7583bcddc4b5605d0c18b51/pytest_rerunfailures-12.0-py3-none-any.whl", hash = "sha256:9a1afd04e21b8177faf08a9bbbf44de7a0fe3fc29f8ddbe83b9684bd5f8f92a9", size = 12977, upload-time = "2023-07-05T05:53:43.909Z" },
 ]
 
 [[package]]
@@ -915,7 +928,6 @@ name = "snmpsim"
 version = "1.2.1"
 source = { editable = "." }
 dependencies = [
-    { name = "pysmi" },
     { name = "pysnmp" },
 ]
 
@@ -932,43 +944,34 @@ dev = [
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-codecov" },
+    { name = "pytest-rerunfailures" },
     { name = "sphinx" },
     { name = "sphinx-copybutton" },
     { name = "sphinx-notfound-page" },
     { name = "sphinx-sitemap-lextudio" },
+    { name = "tomli", marker = "python_full_version < '3.11'" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "black", marker = "extra == 'dev'", specifier = "==23.1.0" },
     { name = "bump2version", marker = "extra == 'dev'", specifier = ">=1.0.1" },
-    { name = "codecov", marker = "extra == 'dev'", specifier = "<3.0.0" },
-    { name = "codecov", marker = "extra == 'dev'", specifier = ">=2.1.12" },
-    { name = "cryptography", marker = "extra == 'dev'", specifier = "<44.0.0" },
-    { name = "cryptography", marker = "extra == 'dev'", specifier = ">=43.0.0" },
-    { name = "doc8", marker = "extra == 'dev'", specifier = "<2.0.0" },
-    { name = "doc8", marker = "extra == 'dev'", specifier = ">=1.1.1" },
-    { name = "furo", marker = "extra == 'dev'", specifier = "<2025.0.0" },
-    { name = "furo", marker = "extra == 'dev'", specifier = ">=2024.1.1" },
+    { name = "codecov", marker = "extra == 'dev'", specifier = ">=2.1.12,<3.0.0" },
+    { name = "cryptography", marker = "extra == 'dev'", specifier = ">=43.0.0,<44.0.0" },
+    { name = "doc8", marker = "extra == 'dev'", specifier = ">=1.1.1,<2.0.0" },
+    { name = "furo", marker = "extra == 'dev'", specifier = ">=2024.1.1,<2025.0.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = "==2.21.0" },
-    { name = "pysmi", specifier = ">=1.6.2,<2.0.0" },
-    { name = "pysmi", marker = "extra == 'dev'", specifier = "<2.0.0" },
-    { name = "pysmi", marker = "extra == 'dev'", specifier = ">=1.5.0" },
-    { name = "pysnmp", specifier = ">=7.1.22,<8.0.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = "<8.0.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.2.0" },
-    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = "<0.22.0" },
-    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.21.1" },
-    { name = "pytest-codecov", marker = "extra == 'dev'", specifier = "<1.0.0" },
-    { name = "pytest-codecov", marker = "extra == 'dev'", specifier = ">=0.4.0" },
-    { name = "sphinx", marker = "extra == 'dev'", specifier = "<8.0.0" },
-    { name = "sphinx", marker = "extra == 'dev'", specifier = ">=7.0.0" },
-    { name = "sphinx-copybutton", marker = "extra == 'dev'", specifier = "<0.6.0" },
-    { name = "sphinx-copybutton", marker = "extra == 'dev'", specifier = ">=0.5.2" },
-    { name = "sphinx-notfound-page", marker = "extra == 'dev'", specifier = "<2.0.0" },
-    { name = "sphinx-notfound-page", marker = "extra == 'dev'", specifier = ">=1.0.0" },
-    { name = "sphinx-sitemap-lextudio", marker = "extra == 'dev'", specifier = "<3.0.0" },
-    { name = "sphinx-sitemap-lextudio", marker = "extra == 'dev'", specifier = ">=2.5.2" },
+    { name = "pysmi", marker = "extra == 'dev'", specifier = ">=2.0.0,<3.0.0" },
+    { name = "pysnmp", specifier = ">=7.1.26,<8.0.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.2.0,<8.0.0" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.21.1,<0.22.0" },
+    { name = "pytest-codecov", marker = "extra == 'dev'", specifier = ">=0.4.0,<1.0.0" },
+    { name = "pytest-rerunfailures", marker = "extra == 'dev'", specifier = ">=12.0,<13.0" },
+    { name = "sphinx", marker = "extra == 'dev'", specifier = ">=7.0.0,<8.0.0" },
+    { name = "sphinx-copybutton", marker = "extra == 'dev'", specifier = ">=0.5.2,<0.6.0" },
+    { name = "sphinx-notfound-page", marker = "extra == 'dev'", specifier = ">=1.0.0,<2.0.0" },
+    { name = "sphinx-sitemap-lextudio", marker = "extra == 'dev'", specifier = ">=2.5.2,<3.0.0" },
+    { name = "tomli", marker = "python_full_version < '3.11' and extra == 'dev'", specifier = ">=2.0.1,<3.0.0" },
 ]
 provides-extras = ["dev"]
 

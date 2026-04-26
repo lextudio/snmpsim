@@ -145,7 +145,7 @@ def main():
     parser.add_argument(
         "--force-index-rebuild",
         action="store_true",
-        help="Rebuild simulation data files indices even if they seem " "up to date",
+        help="Rebuild simulation data files indices even if they seem up to date",
     )
 
     parser.add_argument(
@@ -182,8 +182,7 @@ def main():
     parser.add_argument(
         "--v3-only",
         action="store_true",
-        help="Trip legacy SNMP v1/v2c support to gain a little lesser memory "
-        "footprint",
+        help="Trip legacy SNMP v1/v2c support to gain a little lesser memory footprint",
     )
 
     parser.add_argument(
@@ -198,7 +197,7 @@ def main():
         "--max-var-binds",
         type=int,
         default=64,
-        help="Maximum number of variable bindings to include in a single " "response",
+        help="Maximum number of variable bindings to include in a single response",
     )
 
     parser.add_argument(
@@ -288,7 +287,7 @@ def main():
 
         except OSError as exc:
             log.error(
-                'failed to create cache directory "%s": ' "%s" % (confdir.cache, exc)
+                'failed to create cache directory "%s": %s' % (confdir.cache, exc)
             )
             return 1
 
@@ -449,9 +448,9 @@ def main():
                 )
                 return whole_msg
 
-            rsp_msg = p_mod.apiMessage.getResponse(req_msg)
-            rsp_pdu = p_mod.apiMessage.getPDU(rsp_msg)
-            req_pdu = p_mod.apiMessage.getPDU(req_msg)
+            rsp_msg = p_mod.apiMessage.get_response(req_msg)
+            rsp_pdu = p_mod.apiMessage.get_pdu(rsp_msg)
+            req_pdu = p_mod.apiMessage.get_pdu(req_msg)
 
             if req_pdu.isSameTypeWith(p_mod.GetRequestPDU()):
                 backend_fun = contexts[community_name].readVars
@@ -475,8 +474,8 @@ def main():
                 def backend_fun(var_binds):
                     return get_bulk_handler(
                         var_binds,
-                        p_mod.apiBulkPDU.getNonRepeaters(req_pdu),
-                        p_mod.apiBulkPDU.getMaxRepetitions(req_pdu),
+                        p_mod.apiBulkPDU.get_non_repeaters(req_pdu),
+                        p_mod.apiBulkPDU.get_max_repetitions(req_pdu),
                         contexts[community_name].readNextVars,
                     )
 
@@ -489,7 +488,7 @@ def main():
                 return whole_msg
 
             try:
-                var_binds = backend_fun(p_mod.apiPDU.getVarBinds(req_pdu))
+                var_binds = backend_fun(p_mod.apiPDU.get_varbinds(req_pdu))
 
             except NoDataNotification:
                 return whole_msg
@@ -503,7 +502,7 @@ def main():
                     oid, val = var_binds[idx]
 
                     if val.tagSet in SNMP_2TO1_ERROR_MAP:
-                        var_binds = p_mod.apiPDU.getVarBinds(req_pdu)
+                        var_binds = p_mod.apiPDU.get_varbinds(req_pdu)
 
                         p_mod.apiPDU.setErrorStatus(
                             rsp_pdu, SNMP_2TO1_ERROR_MAP[val.tagSet]
@@ -512,9 +511,9 @@ def main():
 
                         break
 
-            p_mod.apiPDU.setVarBinds(rsp_pdu, var_binds)
+            p_mod.apiPDU.set_varbinds(rsp_pdu, var_binds)
 
-            transport_dispatcher.sendMessage(
+            transport_dispatcher.send_message(
                 encoder.encode(rsp_msg), transport_domain, transport_address
             )
 
@@ -523,8 +522,7 @@ def main():
     # Configure access to data index
 
     log.info(
-        "Maximum number of variable bindings in SNMP "
-        "response: %s" % args.max_var_binds
+        "Maximum number of variable bindings in SNMP response: %s" % args.max_var_binds
     )
 
     data_index_instrum_controller = controller.DataIndexInstrumController()
@@ -608,7 +606,7 @@ def main():
 
                     except Exception as exc:
                         log.error(
-                            'Variation module "%s" shutdown FAILED: ' "%s" % (name, exc)
+                            'Variation module "%s" shutdown FAILED: %s' % (name, exc)
                         )
 
                     else:

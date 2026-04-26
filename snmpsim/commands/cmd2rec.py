@@ -58,7 +58,7 @@ PRIV_PROTOCOLS = {
 
 VERSION_MAP = {"1": 0, "2c": 1, "3": 3}
 
-DESCRIPTION = "SNMP simulation data recorder. Pull simulation data from " "SNMP agent"
+DESCRIPTION = "SNMP simulation data recorder. Pull simulation data from SNMP agent"
 
 
 def _parse_mib_object(arg, last=False):
@@ -202,15 +202,14 @@ def main():
         "--agent-udpv4-endpoint",
         type=endpoints.parse_endpoint,
         metavar="<[X.X.X.X]:NNNNN>",
-        help="SNMP agent UDP/IPv4 address to pull simulation data " "from (name:port)",
+        help="SNMP agent UDP/IPv4 address to pull simulation data from (name:port)",
     )
 
     endpoint_group.add_argument(
         "--agent-udpv6-endpoint",
         type=functools.partial(endpoints.parse_endpoint, ipv6=True),
         metavar="<[X:X:..X]:NNNNN>",
-        help="SNMP agent UDP/IPv6 address to pull simulation data "
-        "from ([name]:port)",
+        help="SNMP agent UDP/IPv6 address to pull simulation data from ([name]:port)",
     )
 
     parser.add_argument(
@@ -400,7 +399,7 @@ def main():
                     exec(compile(fl.read(), mod, "exec"), ctx)
 
             except Exception as exc:
-                log.error('Variation module "%s" execution failure: ' "%s" % (mod, exc))
+                log.error('Variation module "%s" execution failure: %s' % (mod, exc))
                 return 1
 
             variation_module = ctx
@@ -505,7 +504,7 @@ def main():
         log.info("Querying UDP/IPv4 agent at %s:%s" % args.agent_udpv4_endpoint)
 
     log.info(
-        "Agent response timeout: %d secs, retries: " "%s" % (args.timeout, args.retries)
+        "Agent response timeout: %d secs, retries: %s" % (args.timeout, args.retries)
     )
 
     if isinstance(args.start_object, ObjectIdentity) or isinstance(
@@ -620,7 +619,7 @@ def main():
 
                 # initiate another SNMP walk iteration
                 if args.use_getbulk:
-                    cmd_gen.sendVarBinds(
+                    cmd_gen.send_varbinds(
                         snmp_engine,
                         "tgt",
                         args.v3_context_engine_id,
@@ -633,7 +632,7 @@ def main():
                     )
 
                 else:
-                    cmd_gen.sendVarBinds(
+                    cmd_gen.send_varbinds(
                         snmp_engine,
                         "tgt",
                         args.v3_context_engine_id,
@@ -713,7 +712,7 @@ def main():
 
                     # initiate another SNMP walk iteration
                     if args.use_getbulk:
-                        cmd_gen.sendVarBinds(
+                        cmd_gen.send_varbinds(
                             snmp_engine,
                             "tgt",
                             args.v3_context_engine_id,
@@ -726,7 +725,7 @@ def main():
                         )
 
                     else:
-                        cmd_gen.sendVarBinds(
+                        cmd_gen.send_varbinds(
                             snmp_engine,
                             "tgt",
                             args.v3_context_engine_id,
@@ -776,7 +775,7 @@ def main():
     if args.use_getbulk:
         cmd_gen = cmdgen.BulkCommandGenerator()
 
-        cmd_gen.sendVarBinds(
+        cmd_gen.send_varbinds(
             snmp_engine,
             "tgt",
             args.v3_context_engine_id,
@@ -791,7 +790,7 @@ def main():
     else:
         cmd_gen = cmdgen.NextCommandGenerator()
 
-        cmd_gen.sendVarBinds(
+        cmd_gen.send_varbinds(
             snmp_engine,
             "tgt",
             args.v3_context_engine_id,
@@ -821,7 +820,7 @@ def main():
 
     finally:
         if variation_module:
-            log.info("Shutting down variation module " "%s..." % args.variation_module)
+            log.info("Shutting down variation module %s..." % args.variation_module)
 
             try:
                 handler = variation_module["shutdown"]

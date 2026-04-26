@@ -10,10 +10,15 @@ repos:
 #     hooks:
 #     -   id: pyupgrade
 #         args: [--py37-plus]
--   repo: https://github.com/psf/black
-    rev: 23.1.0
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.11.7
     hooks:
-    -   id: black
+    # Run the linter and apply fixes where possible.
+    -   id: ruff
+        args: [ --fix ]
+    # Run the formatter (ruff-format uses ruff's rule set to format code).
+    -   id: ruff-format
 # -   repo: https://github.com/PyCQA/isort
 #     rev: 5.10.1
 #     hooks:

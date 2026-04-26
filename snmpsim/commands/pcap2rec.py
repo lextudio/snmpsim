@@ -344,7 +344,7 @@ def main():
                     exec(compile(fl.read(), mod, "exec"), ctx)
 
             except Exception as exc:
-                log.error('Variation module "%s" execution ' "failure: %s" % (mod, exc))
+                log.error('Variation module "%s" execution failure: %s' % (mod, exc))
                 return 1
 
             variation_module = ctx
@@ -385,9 +385,7 @@ def main():
             )
 
         else:
-            log.info(
-                'Variation module "%s" ' "initialization OK" % args.variation_module
-            )
+            log.info('Variation module "%s" initialization OK' % args.variation_module)
 
     pcap_obj = pcap.pcapObject()
 
@@ -508,8 +506,8 @@ def main():
             return
 
         if rsp_msg["data"].getName() == "response":
-            rsp_pdu = p_mod.apiMessage.getPDU(rsp_msg)
-            error_status = p_mod.apiPDU.getErrorStatus(rsp_pdu)
+            rsp_pdu = p_mod.apiMessage.get_pdu(rsp_msg)
+            error_status = p_mod.apiPDU.get_error_status(rsp_pdu)
 
             if error_status:
                 stats["SNMP errors"] += 1
@@ -525,7 +523,7 @@ def main():
 
                 context = "{}/{}".format(
                     p_mod.ObjectIdentifier(endpoints[endpoint]),
-                    p_mod.apiMessage.getCommunity(rsp_msg),
+                    p_mod.apiMessage.get_community(rsp_msg),
                 )
 
                 if context not in contexts:
@@ -534,7 +532,7 @@ def main():
 
                 context = "{}/{}".format(
                     p_mod.ObjectIdentifier(endpoints[endpoint]),
-                    p_mod.apiMessage.getCommunity(rsp_msg),
+                    p_mod.apiMessage.get_community(rsp_msg),
                 )
 
                 stats["Response PDUs seen"] += 1
@@ -542,7 +540,7 @@ def main():
                 if "basetime" not in private:
                     private["basetime"] = t
 
-                for oid, value in p_mod.apiPDU.getVarBinds(rsp_pdu):
+                for oid, value in p_mod.apiPDU.get_varbinds(rsp_pdu):
                     if oid < args.start_object:
                         continue
 
@@ -600,9 +598,7 @@ def main():
             filename = os.path.join(args.output_dir, context + ext)
 
             if not args.quiet:
-                log.info(
-                    "Creating simulation context %s at " "%s" % (context, filename)
-                )
+                log.info("Creating simulation context %s at %s" % (context, filename))
 
             try:
                 os.mkdir(os.path.dirname(filename))
@@ -704,9 +700,7 @@ def main():
             output_file.close()
 
         if variation_module:
-            log.info(
-                "Shutting down variation module " '"%s"...' % args.variation_module
-            )
+            log.info('Shutting down variation module "%s"...' % args.variation_module)
 
             handler = variation_module["shutdown"]
 
@@ -720,7 +714,7 @@ def main():
                 )
 
             else:
-                log.info('Variation module "%s" shutdown' " OK" % args.variation_module)
+                log.info('Variation module "%s" shutdown OK' % args.variation_module)
 
         log.info(
             """\

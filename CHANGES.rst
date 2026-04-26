@@ -1,4 +1,10 @@
-.. current-version: 1.2.1 (managed by bump2version)
+.. current-version: 1.2.2 (managed by bump2version)
+
+Revision 1.2.2, released on Apr 26, 2026
+----------------------------------------
+
+- Updated pysnmp to 7.1.26.
+- Fixed a bug in cmd2rec.py.
 
 Revision 1.2.1, released on Nov 19, 2025
 ----------------------------------------
